@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RoyalVilla_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a35c8a6adba3720a6e7037990e06e357aadc728")]
 [assembly: System.Reflection.AssemblyProductAttribute("RoyalVilla_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RoyalVilla_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

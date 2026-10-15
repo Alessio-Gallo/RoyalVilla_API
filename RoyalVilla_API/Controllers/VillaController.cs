@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoyalVilla_API.Data;
@@ -8,9 +9,10 @@ namespace RoyalVilla_API.Controllers;
 
 [Route("api/villa")]
 [ApiController]
-public class VillaController(ApplicationDbContext db) : ControllerBase
+public class VillaController(ApplicationDbContext db, IMapper mapper) : ControllerBase
 {
     private readonly ApplicationDbContext _db = db;
+    private readonly IMapper _mapper = mapper; 
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Villa>>> GetVillas()
@@ -47,22 +49,14 @@ public class VillaController(ApplicationDbContext db) : ControllerBase
     {
         try
         {
-            // Explicit cast
-            Villa villa = new()
-            {
-                Name = villaDTO.Name,
-                Details = villaDTO.Details,
-                ImageUrl = villaDTO.ImageUrl,
-                Occupancy = villaDTO.Occupancy,
-                Sqft = villaDTO.Sqft,
-                Rate = villaDTO.Rate, 
-                CreatedDate = DateTime.UtcNow,
-            }; 
+            // Explicit cast to Villa using AutoMapper
+            Villa villa = _mapper.Map<Villa>(villaDTO);
+            villa.CreatedDate = DateTime.UtcNow; 
 
             _db.Villa.Add(villa);
             await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetVillaById), new { id = villa.Id }, villa);
+            return CreatedAtAction(nameof(CreateVilla), new { id = villa.Id }, villa);
         }
         catch (Exception ex)
         {
