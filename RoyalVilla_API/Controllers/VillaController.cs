@@ -16,14 +16,15 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Get all the records
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Villa>>> GetVillas()
+    public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
     {
-        return Ok(await _db.Villa.ToListAsync()); 
+        var villas = await _db.Villa.ToListAsync(); 
+        return Ok(_mapper.Map<List<VillaDTO>>(villas)); 
     } 
 
     // Get a record
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Villa>> GetVillaById(int id)
+    public async Task<ActionResult<VillaDTO>> GetVillaById(int id)
     {
         try
         {
@@ -37,7 +38,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
                 return NotFound($"Villa with ID='{id}' was not found");
             }
 
-            return Ok(villa); 
+            return Ok(_mapper.Map<VillaDTO>(villa)); 
         }
         catch (Exception ex)
         {
@@ -48,10 +49,19 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Create a record
     [HttpPost]
-    public async Task<ActionResult<Villa>> CreateVilla(VillaCreateDTO villaDTO)
+    public async Task<ActionResult<VillaDTO>> CreateVilla(VillaCreateDTO villaDTO)
     {
         try
         {
+            // Check for dups
+            var isDuplicate = await _db.Villa
+                .AnyAsync(v => v.Name.ToLower() == villaDTO.Name.ToLower());
+
+            if(isDuplicate)
+            {
+                return Conflict($"A villa with the name: '{villaDTO.Name}' already exists");
+            }
+
             // Explicit cast to Villa using AutoMapper
             Villa villa = _mapper.Map<Villa>(villaDTO);
             villa.CreatedDate = DateTime.UtcNow; 
@@ -59,7 +69,11 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             await _db.Villa.AddAsync(villa);
             await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreateVilla), new { id = villa.Id }, villa);
+            return CreatedAtAction(
+                nameof(GetVillaById), 
+                new { id = villa.Id }, 
+                _mapper.Map<VillaDTO>(villa)
+            );
         }
         catch (Exception ex)
         {
@@ -70,7 +84,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Update a record
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Villa>> UpdateVilla([FromRoute] int id, VillaUpdateDTO villaDTO)
+    public async Task<ActionResult<VillaUpdateDTO>> UpdateVilla([FromRoute] int id, VillaUpdateDTO villaDTO)
     {
         try
         {
@@ -91,7 +105,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
                 .AnyAsync(v => v.Id != id && v.Name.ToLower() == villaDTO.Name.ToLower());
 
             if(isDuplicate)
-            {   // 409 error code
+            {
                 return Conflict($"A villa with the name: '{villaDTO.Name}' already exists");
             }
 
@@ -111,7 +125,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Delete a record
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult<Villa>> DeleteVilla(int id)
+    public async Task<ActionResult> DeleteVilla(int id)
     {
         try
         {
