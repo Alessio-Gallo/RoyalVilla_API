@@ -17,6 +17,8 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Get all the records
     [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
         var villas = await _db.Villa.ToListAsync(); 
@@ -28,8 +30,13 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
         return Ok(response); 
     } 
 
+
     // Get a record
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<VillaDTO>>> GetVillaById(int id)
     {
         try
@@ -58,8 +65,13 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
         }
     }
 
+
     // Create a record
     [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla(VillaCreateDTO villaDTO)
     {
         try
@@ -104,9 +116,15 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
         }
     }
 
+
     // Update a record
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla([FromRoute] int id, VillaUpdateDTO villaUpdateDTO)
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, VillaUpdateDTO villaUpdateDTO)
     {
         try
         {
@@ -156,9 +174,12 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
         }
     }
-    
+
     // Delete a record
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<object>>> DeleteVilla(int id)
     {
         try

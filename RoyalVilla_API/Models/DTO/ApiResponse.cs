@@ -22,7 +22,7 @@ public class ApiResponse<TData>
         };
     
     // Success responses
-    public static ApiResponse<TData> Ok(TData data, string message) =>
+    public static ApiResponse<TData> Ok(TData? data, string message) =>
         Create(true, HttpStatusCode.OK, message, data);
 
     public static ApiResponse<TData> CreatedAt(TData data, string message) =>
