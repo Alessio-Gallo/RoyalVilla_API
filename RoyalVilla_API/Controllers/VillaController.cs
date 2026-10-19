@@ -34,7 +34,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             var villa = await _db.Villa.FindAsync(id);
             if(villa == null)
             {
-                return NotFound($"Villa with ID={id} was not found");
+                return NotFound($"Villa with ID='{id}' was not found");
             }
 
             return Ok(villa); 
@@ -70,7 +70,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
     // Update a record
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Villa>> UpdateVilla(int id, VillaUpdateDTO villaDTO)
+    public async Task<ActionResult<Villa>> UpdateVilla([FromRoute] int id, VillaUpdateDTO villaDTO)
     {
         try
         {
@@ -83,7 +83,16 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
 
             if(existingVilla == null)
             {
-                return NotFound($"Villa with ID={id} was not found");
+                return NotFound($"Villa with ID='{id}' was not found");
+            }
+
+            // Check for dups
+            var isDuplicate = await _db.Villa
+                .AnyAsync(v => v.Id != id && v.Name.ToLower() == villaDTO.Name.ToLower());
+
+            if(isDuplicate)
+            {   // 409 error code
+                return Conflict($"A villa with the name: '{villaDTO.Name}' already exists");
             }
 
             _mapper.Map(villaDTO, existingVilla); 
