@@ -99,5 +99,28 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
                 $"An error occurred while updating the villa: {ex.Message}");
         } 
     }
+
+    // Delete a record
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<Villa>> DeleteVilla(int id)
+    {
+        try
+        {
+            var existingVilla = await _db.Villa.FindAsync(id);
+
+            if(existingVilla == null) {
+                return NotFound($"Villa with id:{id} was not found");
+            }
+
+            _db.Villa.Remove(existingVilla);
+            await _db.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, 
+                $"An error occurred while deleting the villa:{ex.Message}");
+        }
+        return NoContent(); 
+    }
 }
 
