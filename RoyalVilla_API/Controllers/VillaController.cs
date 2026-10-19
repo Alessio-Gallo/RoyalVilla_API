@@ -36,7 +36,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
         {
             if(id <= 0) 
             {
-                return BadRequest(ApiResponse<VillaDTO>.BadRequest($"Villa with must be greater than 0"));
+                return BadRequest(ApiResponse<VillaDTO>.BadRequest($"Villa ID must be greater than 0"));
             }
 
             var villa = await _db.Villa.FindAsync(id);
@@ -110,18 +110,18 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
     {
         try
         {
-            if(id != villaUpdateDTO.Id)
+            if (id != villaUpdateDTO.Id)
             {
-                return BadRequest(ApiResponse<VillaUpdateDTO>.BadRequest(
+                return BadRequest(ApiResponse<VillaDTO>.BadRequest(
                     "Villa ID in the URL does not match Villa ID in request body")
                 );
             }
 
             var existingVilla = await _db.Villa.FindAsync(id);
 
-            if(existingVilla == null)
+            if (existingVilla == null)
             {
-                return NotFound(ApiResponse<VillaUpdateDTO>.NotFound(
+                return NotFound(ApiResponse<VillaDTO>.NotFound(
                     $"Villa with ID='{id}' was not found")
                 );
             }
@@ -130,29 +130,33 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             var isDuplicate = await _db.Villa
                 .AnyAsync(v => v.Id != id && v.Name.ToLower() == villaUpdateDTO.Name.ToLower());
 
-            if(isDuplicate)
+            if (isDuplicate)
             {
-                return Conflict(ApiResponse<VillaUpdateDTO>.Conflict($"A villa with the name: '{villaUpdateDTO.Name}' already exists"));
+                return Conflict(ApiResponse<VillaDTO>.Conflict(
+                    $"A villa with the name: '{villaUpdateDTO.Name}' already exists"
+                ));
             }
 
-            _mapper.Map(villaUpdateDTO, existingVilla); 
-            existingVilla.UpdateDate = DateTime.UtcNow; 
+            _mapper.Map(villaUpdateDTO, existingVilla);
+            existingVilla.UpdateDate = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
 
-            return Ok(ApiResponse<VillaDTO>.Ok(_mapper.Map<VillaDTO>(existingVilla), "Villa updated successfully"));
+            return Ok(ApiResponse<VillaDTO>.Ok(
+                _mapper.Map<VillaDTO>(existingVilla), "Villa updated successfully"
+            ));
         }
         catch (Exception ex)
         {
             var errorResponse = ApiResponse<VillaDTO>.Error(
                 HttpStatusCode.InternalServerError,
-                $"An error occurred while updating the villa: ",
+                "An error occurred while updating the villa",
                 ex.Message
             );
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-        } 
+        }
     }
-
+    
     // Delete a record
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ApiResponse<object>>> DeleteVilla(int id)
