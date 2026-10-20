@@ -7,5 +7,6 @@ namespace RoyalVilla_API.Data;
 public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Villa> Villa { get; set; }
+    public DbSet<User> User { get; set; }
 }
 
