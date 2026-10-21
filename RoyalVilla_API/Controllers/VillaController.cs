@@ -10,9 +10,9 @@ namespace RoyalVilla_API.Controllers;
 
 [Route("api/villa")]
 [ApiController]
-public class VillaController(ApplicationDbContext db, IMapper mapper) : ControllerBase
+public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
 {
-    private readonly ApplicationDbContext _db = db;
+    private readonly ApplicationDbContext _dbContext = dbContext;
     private readonly IMapper _mapper = mapper; 
 
     // Get all the records
@@ -21,7 +21,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
-        var villas = await _db.Villa.ToListAsync(); 
+        var villas = await _dbContext.Villa.ToListAsync(); 
         var responseData = _mapper.Map<List<VillaDTO>>(villas); 
         var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(
             responseData, "Villas retrieved successfully"
@@ -46,7 +46,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
                 return BadRequest(ApiResponse<VillaDTO>.BadRequest($"Villa ID must be greater than 0"));
             }
 
-            var villa = await _db.Villa.FindAsync(id);
+            var villa = await _dbContext.Villa.FindAsync(id);
             if(villa == null)
             {
                 return NotFound(ApiResponse<VillaDTO>.NotFound($"Villa with ID='{id}' was not found"));
@@ -82,7 +82,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             }
 
             // Check for dups
-            var isDuplicate = await _db.Villa
+            var isDuplicate = await _dbContext.Villa
                 .AnyAsync(v => v.Name.ToLower() == villaDTO.Name.ToLower());
 
             if(isDuplicate)
@@ -96,8 +96,8 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             Villa villa = _mapper.Map<Villa>(villaDTO);
             villa.CreatedDate = DateTime.UtcNow; 
 
-            await _db.Villa.AddAsync(villa);
-            await _db.SaveChangesAsync();
+            await _dbContext.Villa.AddAsync(villa);
+            await _dbContext.SaveChangesAsync();
 
             var response = ApiResponse<VillaDTO>.CreatedAt(
                 _mapper.Map<VillaDTO>(villa), "Villa created successfully"
@@ -135,7 +135,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
                 );
             }
 
-            var existingVilla = await _db.Villa.FindAsync(id);
+            var existingVilla = await _dbContext.Villa.FindAsync(id);
 
             if (existingVilla == null)
             {
@@ -145,7 +145,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             }
 
             // Check for dups
-            var isDuplicate = await _db.Villa
+            var isDuplicate = await _dbContext.Villa
                 .AnyAsync(v => v.Id != id && v.Name.ToLower() == villaUpdateDTO.Name.ToLower());
 
             if (isDuplicate)
@@ -158,7 +158,7 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
             _mapper.Map(villaUpdateDTO, existingVilla);
             existingVilla.UpdateDate = DateTime.UtcNow;
 
-            await _db.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return Ok(ApiResponse<VillaDTO>.Ok(
                 _mapper.Map<VillaDTO>(existingVilla), "Villa updated successfully"
@@ -184,14 +184,14 @@ public class VillaController(ApplicationDbContext db, IMapper mapper) : Controll
     {
         try
         {
-            var existingVilla = await _db.Villa.FindAsync(id);
+            var existingVilla = await _dbContext.Villa.FindAsync(id);
 
             if(existingVilla == null) {
                 return NotFound(ApiResponse<object>.NotFound($"Villa with id:{id} was not found"));
             }
 
-            _db.Villa.Remove(existingVilla);
-            await _db.SaveChangesAsync();
+            _dbContext.Villa.Remove(existingVilla);
+            await _dbContext.SaveChangesAsync();
 
             var response = ApiResponse<object>.NoContent("Villa deleted successfully");
             return Ok(response); 

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RoyalVilla_API.Data;
 using RoyalVilla_API.Models;
 using RoyalVilla_API.Models.DTO;
+using RoyalVilla_API.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,10 @@ builder.Services.AddAutoMapper(o =>
     o.CreateMap<Villa, VillaCreateDTO>().ReverseMap();
     o.CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
     o.CreateMap<Villa, VillaDTO>().ReverseMap();
+    o.CreateMap<User, UserDTO>().ReverseMap();
 });
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
