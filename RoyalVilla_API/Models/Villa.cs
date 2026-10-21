@@ -15,4 +15,6 @@ public class Villa
     public string? ImageUrl { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? UpdateDate { get; set; }
+
+    public ICollection<VillaAmenities>? Amenities { get; set; }
 }

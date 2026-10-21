@@ -96,6 +96,54 @@ namespace RoyalVilla_API.Migrations
 
                     b.ToTable("Villa");
                 });
+
+            modelBuilder.Entity("RoyalVilla_API.Models.VillaAmenities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("VillaId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VillaId");
+
+                    b.ToTable("VillaAmenities");
+                });
+
+            modelBuilder.Entity("RoyalVilla_API.Models.VillaAmenities", b =>
+                {
+                    b.HasOne("RoyalVilla_API.Models.Villa", "Villa")
+                        .WithMany("Amenities")
+                        .HasForeignKey("VillaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Villa");
+                });
+
+            modelBuilder.Entity("RoyalVilla_API.Models.Villa", b =>
+                {
+                    b.Navigation("Amenities");
+                });
 #pragma warning restore 612, 618
         }
     }

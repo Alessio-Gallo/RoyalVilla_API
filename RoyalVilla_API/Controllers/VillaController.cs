@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoyalVilla_API.Data;
@@ -10,6 +11,7 @@ namespace RoyalVilla_API.Controllers;
 
 [Route("api/villa")]
 [ApiController]
+// [Authorize(Roles = "Customer,Admin")]
 public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
@@ -17,8 +19,9 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Get all the records
     [HttpGet]
+    // [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
         var villas = await _dbContext.Villa.ToListAsync(); 
@@ -33,6 +36,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Get a record
     [HttpGet("{id:int}")]
+    // [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
@@ -69,7 +73,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     // Create a record
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla(VillaCreateDTO villaDTO)
@@ -175,30 +179,31 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
         }
     }
 
+
     // Delete a record
     [HttpDelete("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiResponse<object>>> DeleteVilla(int id)
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> DeleteVilla(int id)
     {
         try
         {
             var existingVilla = await _dbContext.Villa.FindAsync(id);
 
             if(existingVilla == null) {
-                return NotFound(ApiResponse<object>.NotFound($"Villa with id:{id} was not found"));
+                return NotFound(ApiResponse<VillaDTO>.NotFound($"Villa with id:{id} was not found"));
             }
 
             _dbContext.Villa.Remove(existingVilla);
             await _dbContext.SaveChangesAsync();
 
-            var response = ApiResponse<object>.NoContent("Villa deleted successfully");
+            var response = ApiResponse<VillaDTO>.NoContent("Villa deleted successfully");
             return Ok(response); 
         }
         catch (Exception ex)
         {
-            var errorResponse = ApiResponse<object>.Error(
+            var errorResponse = ApiResponse<VillaDTO>.Error(
                 HttpStatusCode.InternalServerError,
                 $"An error occurred while deleting the villa: ",
                 ex.Message
