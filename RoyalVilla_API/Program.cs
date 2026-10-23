@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -75,6 +74,13 @@ builder.Services.AddAutoMapper(o =>
     o.CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
     o.CreateMap<Villa, VillaDTO>().ReverseMap();
     o.CreateMap<User, UserDTO>().ReverseMap();
+    o.CreateMap<VillaAmenitiesCreateDTO, VillaAmenities>().ReverseMap();
+    o.CreateMap<VillaAmenitiesUpdateDTO, VillaAmenities>().ReverseMap();
+    o.CreateMap<VillaAmenities, VillaAmenitiesDTO>()
+        .ForMember(
+            dest => dest.VillaName, 
+            opt => opt.MapFrom(src => src.Villa != null ? src.Villa.Name : null)
+        );
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();

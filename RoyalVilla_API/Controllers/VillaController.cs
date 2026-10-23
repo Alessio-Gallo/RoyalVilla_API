@@ -24,7 +24,10 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
     {
-        var villas = await _dbContext.Villa.ToListAsync(); 
+        var villas = await _dbContext.Villa
+            .AsNoTracking()
+            .ToListAsync();
+        
         var responseData = _mapper.Map<List<VillaDTO>>(villas); 
         var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(
             responseData, "Villas retrieved successfully"
@@ -47,7 +50,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
         {
             if(id <= 0) 
             {
-                return BadRequest(ApiResponse<VillaDTO>.BadRequest($"Villa ID must be greater than 0"));
+                return BadRequest(ApiResponse<VillaDTO>.BadRequest("Villa ID must be greater than 0"));
             }
 
             var villa = await _dbContext.Villa.FindAsync(id);
@@ -63,7 +66,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
                 ApiResponse<VillaDTO>.Error(HttpStatusCode.InternalServerError, 
-                $"An error occurred while retrieving villa with ID {id}:",
+                $"An error occurred while retrieving villa with ID {id}",
                 ex.Message
             ));
         }
@@ -76,31 +79,26 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla(VillaCreateDTO villaDTO)
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla(VillaCreateDTO dto)  
     {
         try
         {
-            if(villaDTO == null)
-            {
-                return BadRequest(ApiResponse<VillaDTO>.BadRequest("Villa data is required"));
-            }
-
             // Check for dups
             var isDuplicate = await _dbContext.Villa
-                .AnyAsync(v => v.Name.ToLower() == villaDTO.Name.ToLower());
+                .AnyAsync(v => v.Name.ToLower() == dto.Name.ToLower());
 
             if(isDuplicate)
             {
                 return Conflict(
-                    ApiResponse<VillaDTO>.Conflict($"A villa with the name: '{villaDTO.Name}' already exists")
+                    ApiResponse<VillaDTO>.Conflict($"A villa with the name: '{dto.Name}' already exists")
                 );
             }
 
             // Explicit cast to Villa using AutoMapper
-            Villa villa = _mapper.Map<Villa>(villaDTO);
+            Villa villa = _mapper.Map<Villa>(dto);
             villa.CreatedDate = DateTime.UtcNow; 
 
-            await _dbContext.Villa.AddAsync(villa);
+            _dbContext.Villa.Add(villa);
             await _dbContext.SaveChangesAsync();
 
             var response = ApiResponse<VillaDTO>.CreatedAt(
@@ -113,7 +111,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
         {
             var errorResponse = ApiResponse<VillaDTO>.Error(
                 HttpStatusCode.InternalServerError,
-                $"An error occurred while creating the villa: ",
+                $"An error occurred while creating the villa",
                 ex.Message
             );
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
@@ -128,14 +126,14 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, VillaUpdateDTO villaUpdateDTO)
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, VillaUpdateDTO dto)
     {
         try
         {
-            if (id != villaUpdateDTO.Id)
+            if (id != dto.Id)
             {
                 return BadRequest(ApiResponse<VillaDTO>.BadRequest(
-                    "Villa ID in the URL does not match Villa ID in request body")
+                    "Villa ID in the URL does not match Villa ID in the request body")
                 );
             }
 
@@ -150,16 +148,16 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
             // Check for dups
             var isDuplicate = await _dbContext.Villa
-                .AnyAsync(v => v.Id != id && v.Name.ToLower() == villaUpdateDTO.Name.ToLower());
+                .AnyAsync(v => v.Id != id && v.Name.ToLower() == dto.Name.ToLower());
 
             if (isDuplicate)
             {
                 return Conflict(ApiResponse<VillaDTO>.Conflict(
-                    $"A villa with the name: '{villaUpdateDTO.Name}' already exists"
+                    $"A villa with the name: '{dto.Name}' already exists"
                 ));
             }
 
-            _mapper.Map(villaUpdateDTO, existingVilla);
+            _mapper.Map(dto, existingVilla);
             existingVilla.UpdateDate = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync();
@@ -192,7 +190,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
             var existingVilla = await _dbContext.Villa.FindAsync(id);
 
             if(existingVilla == null) {
-                return NotFound(ApiResponse<VillaDTO>.NotFound($"Villa with id:{id} was not found"));
+                return NotFound(ApiResponse<VillaDTO>.NotFound($"Villa with ID={id} was not found"));
             }
 
             _dbContext.Villa.Remove(existingVilla);
@@ -204,8 +202,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
         catch (Exception ex)
         {
             var errorResponse = ApiResponse<VillaDTO>.Error(
-                HttpStatusCode.InternalServerError,
-                $"An error occurred while deleting the villa: ",
+                HttpStatusCode.InternalServerError, $"An error occurred while deleting the villa",
                 ex.Message
             );
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
