@@ -14,6 +14,7 @@
           "Microsoft.EntityFrameworkCore": "10.0.13",
           "Microsoft.EntityFrameworkCore.Design": "10.0.13",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+          "RoyalVilla.DTO": "1.0.0",
           "Scalar.AspNetCore": "2.18.0"
         },
         "runtime": {
@@ -614,6 +615,14 @@
             "fileVersion": "8.19.2.26195"
           }
         }
+      },
+      "RoyalVilla.DTO/1.0.0": {
+        "runtime": {
+          "RoyalVilla.DTO.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -881,6 +890,11 @@
       "sha512": "sha512-gqhDC/icByKEutygpr+OFgAmjwTVowyzFjWB8K0q1ww8uFj5a1BQNL+QvijUl9uhq4p8OdDwcAIrjVC+eC9FVA==",
       "path": "system.identitymodel.tokens.jwt/8.19.2",
       "hashPath": "system.identitymodel.tokens.jwt.8.19.2.nupkg.sha512"
+    },
+    "RoyalVilla.DTO/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

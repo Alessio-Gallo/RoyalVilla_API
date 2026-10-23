@@ -847,6 +847,16 @@
             "related": ".xml"
           }
         }
+      },
+      "RoyalVilla.DTO/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/RoyalVilla.DTO.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RoyalVilla.DTO.dll": {}
+        }
       }
     }
   },
@@ -2647,6 +2657,11 @@
         "system.identitymodel.tokens.jwt.8.19.2.nupkg.sha512",
         "system.identitymodel.tokens.jwt.nuspec"
       ]
+    },
+    "RoyalVilla.DTO/1.0.0": {
+      "type": "project",
+      "path": "../RoyalVilla.DTO/RoyalVilla.DTO.csproj",
+      "msbuildProject": "../RoyalVilla.DTO/RoyalVilla.DTO.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -2657,6 +2672,7 @@
       "Microsoft.EntityFrameworkCore >= 10.0.13",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.13",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 10.0.3",
+      "RoyalVilla.DTO >= 1.0.0",
       "Scalar.AspNetCore >= 2.18.0"
     ]
   },
@@ -2685,7 +2701,11 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVilla.DTO\\RoyalVilla.DTO.csproj": {
+              "projectPath": "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVilla.DTO\\RoyalVilla.DTO.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

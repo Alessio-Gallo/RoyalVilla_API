@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="RoyalVilla.DTO/RoyalVilla.DTO.csproj" />
+  <Project Path="RoyalVillaWeb/RoyalVillaWeb.csproj" />
+  <Project Path="RoyalVilla_API/RoyalVilla_API.csproj" />
+</Solution>

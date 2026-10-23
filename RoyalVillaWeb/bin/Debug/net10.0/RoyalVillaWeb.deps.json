@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "RoyalVillaWeb/1.0.0": {
+        "dependencies": {
+          "RoyalVilla.DTO": "1.0.0"
+        },
+        "runtime": {
+          "RoyalVillaWeb.dll": {}
+        }
+      },
+      "RoyalVilla.DTO/1.0.0": {
+        "runtime": {
+          "RoyalVilla.DTO.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "RoyalVillaWeb/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RoyalVilla.DTO/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

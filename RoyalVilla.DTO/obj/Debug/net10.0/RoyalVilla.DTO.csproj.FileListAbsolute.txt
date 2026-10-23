@@ -1,0 +1,12 @@
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\bin\Debug\net10.0\RoyalVilla.DTO.deps.json
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\bin\Debug\net10.0\RoyalVilla.DTO.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\bin\Debug\net10.0\RoyalVilla.DTO.pdb
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.GeneratedMSBuildEditorConfig.editorconfig
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.AssemblyInfoInputs.cache
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.AssemblyInfo.cs
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.csproj.CoreCompileInputs.cache
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.sourcelink.json
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\refint\RoyalVilla.DTO.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\RoyalVilla.DTO.pdb
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla.DTO\obj\Debug\net10.0\ref\RoyalVilla.DTO.dll

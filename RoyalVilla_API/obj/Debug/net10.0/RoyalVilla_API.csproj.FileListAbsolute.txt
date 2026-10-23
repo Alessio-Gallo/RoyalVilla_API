@@ -132,3 +132,5 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Mic
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\RoyalVilla.DTO.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\RoyalVilla.DTO.pdb
