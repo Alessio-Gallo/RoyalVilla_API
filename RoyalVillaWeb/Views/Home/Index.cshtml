@@ -1,8 +1,91 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿﻿@using RoyalVilla.DTO
+@model IEnumerable<VillaDTO>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero section -->
+<section class="royal-hero">
+    <div class="container royal-hero-content">
+        <h1>
+            The luxury of feeling<br />
+            <span>at home</span>
+        </h1>
+
+        <p>
+            Discover exclusive villas, extraordinary places, and stays designed for you.
+        </p>
+
+        <a href="#ville" class="btn royal-btn">
+            Explore villas
+            <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Elenco dinamico delle ville -->
+<section id="ville" class="container royal-villas">
+    <div class="royal-section-heading">
+        <div>
+            <h2>Villas selected for you</h2>
+        </div>
+
+        <span class="royal-villa-count">@(Model?.Count() ?? 0) properties</span>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="royal-empty">
+            <h3>No villa available at the moment</h3>
+            <p>We're preparing new destinations for you</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var villa in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="villa-card">
+
+                        <div class="villa-card-image">
+                            @if (!string.IsNullOrWhiteSpace(villa.ImageUrl))
+                            {
+                                <img src="@villa.ImageUrl" alt="@villa.Name" loading="lazy" />
+                            }
+                            else
+                            {
+                                <img src="https://www.villana.id/images/pvr-villa-placeholder.webp" alt="@villa.Name" loading="lazy"/>
+                            }                           
+                        </div>
+
+                        <div class="villa-card-body">
+                            <div class="villa-card-title">
+                                <h3>@villa.Name</h3>
+                                <span class="villa-price"> @villa.Rate.ToString("C")</span>
+                            </div>
+
+                            <p class="villa-description">@villa.Details</p>
+
+                            <div class="villa-features">
+                                <span>
+                                    <i class="bi bi-house-door" aria-hidden="true"></i> @villa.Sqft sqft
+                                </span>
+
+                                <span>
+                                    <i class="bi bi-person" aria-hidden="true"></i> @villa.Occupancy guests
+                                </span>
+                            </div>
+
+                            <div class="villa-card-footer">
+                                <a asp-controller="Villa" asp-action="Details" asp-route-id="@villa.Id" 
+                                class="villa-details-link"> Explore <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</section>

@@ -87,8 +87,6 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\comp
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\psa7t7n868-{0}-muycvpuwrr-muycvpuwrr.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\ofs67ok29s-{0}-87fc7y1x7t-87fc7y1x7t.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\4n0gkf7xwf-{0}-mlv21k5csn-mlv21k5csn.gz
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-2jb1d67x3c-2jb1d67x3c.gz
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-2jb1d67x3c-2jb1d67x3c.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\staticwebassets.build.json
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\staticwebassets.build.json.cache
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\staticwebassets.development.json
@@ -100,3 +98,11 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\refi
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\RoyalVillaWeb.pdb
 d:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\RoyalVillaWeb.genruntimeconfig.cache
 d:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\ref\RoyalVillaWeb.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\AutoMapper.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\Views\Home\Index.cshtml.rz.scp.css
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-drbgrspdlh-drbgrspdlh.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-drbgrspdlh-drbgrspdlh.gz

@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "d:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj": {}
+    "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj": {}
   },
   "projects": {
     "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVilla.DTO\\RoyalVilla.DTO.csproj": {
@@ -339,14 +339,14 @@
         }
       }
     },
-    "d:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj": {
+    "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj",
+        "projectUniqueName": "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj",
         "projectName": "RoyalVillaWeb",
-        "projectPath": "d:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj",
+        "projectPath": "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\RoyalVillaWeb.csproj",
         "packagesPath": "C:\\Users\\aless\\.nuget\\packages\\",
-        "outputPath": "d:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\obj\\",
+        "outputPath": "D:\\WebDev\\RESTful-api\\part_1\\RoyalVilla_API\\RoyalVillaWeb\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aless\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -384,6 +384,12 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[16.2.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
