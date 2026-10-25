@@ -39,7 +39,6 @@ body[b-420y0b834v] {
     padding-bottom: 90px;
 }
 
-
 .royal-hero h1[b-420y0b834v] {
     margin-bottom: 22px;
     font-family: Georgia, serif;
@@ -83,9 +82,9 @@ body[b-420y0b834v] {
 }
 
 .royal-section-heading[b-420y0b834v] {
+    font-family: Georgia, serif;
     display: flex;
     justify-content: space-between;
-    gap: 20px;
     margin-bottom: 35px;
     margin-top: 20px;
 }
@@ -131,7 +130,7 @@ body[b-420y0b834v] {
     display: flex;
     flex-direction: column;
     min-height: 270px;
-    padding: 20px;
+    padding: 15px;
 }
 
 .villa-card-title[b-420y0b834v] {
