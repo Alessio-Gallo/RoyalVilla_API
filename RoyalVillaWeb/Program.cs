@@ -1,4 +1,3 @@
-using AutoMapper;
 using RoyalVilla.DTO;
 using RoyalVillaWeb.Services;
 
