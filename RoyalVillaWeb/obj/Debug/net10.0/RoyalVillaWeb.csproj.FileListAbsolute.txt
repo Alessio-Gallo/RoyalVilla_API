@@ -104,5 +104,5 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Micr
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\Views\Home\Index.cshtml.rz.scp.css
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-nqb0pv51xm-nqb0pv51xm.gz
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-nqb0pv51xm-nqb0pv51xm.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-gy2ygpienr-gy2ygpienr.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-gy2ygpienr-gy2ygpienr.gz

@@ -14,8 +14,6 @@ body {
 /* HERO */
 
 .royal-hero {
-    margin-left: 10%;
-    margin-right: 10%;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -180,12 +178,10 @@ body {
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
-    color: rgb(15, 144, 219);
     width: 100%;
 }
 
 ::deep .villa-details-link:hover {
-    color: rgb(10, 95, 150);
     transform: translateX(4px);
 }
 

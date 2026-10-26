@@ -15,8 +15,6 @@ body[b-420y0b834v] {
 /* HERO */
 
 .royal-hero[b-420y0b834v] {
-    margin-left: 10%;
-    margin-right: 10%;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -181,12 +179,10 @@ body[b-420y0b834v] {
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
-    color: rgb(15, 144, 219);
     width: 100%;
 }
 
 [b-420y0b834v] .villa-details-link:hover {
-    color: rgb(10, 95, 150);
     transform: translateX(4px);
 }
 
@@ -258,6 +254,10 @@ a[b-dplogu6eb3] {
   color: #0077cc;
 }
 
+main[b-dplogu6eb3] {
+  min-height: 1000px;
+}
+
 .btn-primary[b-dplogu6eb3] {
   color: #fff;
   background-color: #1b6ec2;
@@ -287,7 +287,7 @@ button.accept-policy[b-dplogu6eb3] {
 }
 
 .footer[b-dplogu6eb3] {
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
   white-space: nowrap;

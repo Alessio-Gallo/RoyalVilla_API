@@ -11,6 +11,10 @@ a[b-dplogu6eb3] {
   color: #0077cc;
 }
 
+main[b-dplogu6eb3] {
+  min-height: 1000px;
+}
+
 .btn-primary[b-dplogu6eb3] {
   color: #fff;
   background-color: #1b6ec2;
@@ -40,7 +44,7 @@ button.accept-policy[b-dplogu6eb3] {
 }
 
 .footer[b-dplogu6eb3] {
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
