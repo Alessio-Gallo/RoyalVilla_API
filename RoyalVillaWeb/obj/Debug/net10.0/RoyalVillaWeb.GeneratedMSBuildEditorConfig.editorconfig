@@ -39,6 +39,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlsbGFcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/WebDev/RESTful-api/part_1/RoyalVilla_API/RoyalVillaWeb/Views/Villa/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlsbGFcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/WebDev/RESTful-api/part_1/RoyalVilla_API/RoyalVillaWeb/Views/Villa/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlsbGFcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

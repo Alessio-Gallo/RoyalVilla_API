@@ -55,7 +55,6 @@
                             @* Occupancy *@
 							<div class="col-md-6 mb-3">
 								<label asp-for="Occupancy" class="form-label">Max Occupancy</label>
-                                <span class="text-danger">*</span>
                                 <input asp-for="Occupancy" type="number" class="form-control" placeholder="Number of guests" />
                                 <span asp-validation-for="Occupancy" class="text-danger small"></span>
 							</div>
@@ -64,7 +63,6 @@
 						@* Sqft *@
 						<div class="mb-3">
 							<label asp-for="Sqft" class="form-label">Square Feet</label>
-                            <span class="text-danger">*</span>
 							<input asp-for="Sqft" type="number" class="form-control" placeholder="Area in sqft" />
 							<span asp-validation-for="Sqft" class="text-danger small"></span>
 						</div>
@@ -72,7 +70,7 @@
 						<div class="mb-3">
 							<label asp-for="ImageUrl" class="form-label">Villa Image</label>
 							<input asp-for="ImageUrl" class="form-control" accept="image/*" onchange="previewImage(this)"
-								   placeholder="Describe the villa" />
+								   placeholder="Link to image" />
 							<span asp-validation-for="ImageUrl" class="text-danger small"></span>
 							<small class="form-text text-muted">Supported formats: JPG, JPEG, PNG (Max 5MB)</small>
 						</div>

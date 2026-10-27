@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="mb-1">Villa Management</h2>
-            <p class="text-muted mb-0">Manage your villa listings</p>
+            <p class="text-muted mb-0 mt-3">Manage your villa listings</p>
         </div>
         <a asp-controller="Villa" asp-action="Create" class="btn btn-success">
             <i class="bi bi-plus-circle me-2"></i> Add New Villa
@@ -67,7 +67,7 @@
                                     <td>
                                         @if (!string.IsNullOrEmpty(villa.ImageUrl))
                                         {
-                                            @* <img src="@SD.GetImageUrl(villa.ImageUrl)" class="rounded" style="width: 60px; height: 45px; object-fit: cover;"> *@
+                                            <img src="@villa.ImageUrl" class="rounded" style="width: 60px; height: 45px; object-fit: cover;">
                                         }
                                         else
                                         {

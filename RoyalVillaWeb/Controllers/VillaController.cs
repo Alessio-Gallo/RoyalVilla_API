@@ -12,6 +12,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
     private readonly IVillaService _villaService = villaService; 
     private readonly IMapper _mapper = mapper; 
 
+    // Home page
     public async Task<IActionResult> Index()
     {
         List<VillaDTO> villaList = [];
@@ -30,12 +31,12 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
         return View(villaList);
     }
 
-    
+
+    // Create page
     public IActionResult Create()
     {
         return View();
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -66,6 +67,51 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
     }
 
 
+    // Edit page
+    public async Task<IActionResult> Edit(int id)
+    {
+        if(id <= 0)
+        {
+            TempData["error"] = "Invalid villa ID"; 
+            return RedirectToAction(nameof(Index)); 
+        }
+
+        try
+        {
+            var response = await _villaService.GetAsync<ApiResponse<VillaDTO>>(id, "");
+            if(response != null && response.Success && response.Data != null)
+            {
+                return View(_mapper.Map<VillaUpdateDTO>(response.Data));
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = $"An error occurred: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+        return View(); 
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(VillaUpdateDTO updateDTO)
+    {
+        try
+        {
+            var response = await _villaService.UpdateAsync<ApiResponse<VillaDTO>>(updateDTO, "");
+            if(response != null && response.Success)
+            {
+                TempData["success"] = "Villa updated successfully";
+            }
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = $"An error occurred: {ex.Message}";
+        }
+        return RedirectToAction(nameof(Index));; 
+    }
+
     public async Task<IActionResult> Delete(int id)
     {
         if(id <= 0)
@@ -93,11 +139,6 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(VillaDTO villaDTO)
     {
-        if(villaDTO.Id <= 0)
-        {
-            TempData["error"] = "Invalid villa ID";
-            return RedirectToAction(nameof(Index));
-        }
         try
         {
             var response = await _villaService.DeleteAsync<ApiResponse<VillaDTO>>(villaDTO.Id, "");
@@ -105,7 +146,6 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
             if(response != null && response.Success)
             {
                 TempData["success"] = "Villa deleted successfully";
-                return RedirectToAction(nameof(Index));
             }
         }
         catch (Exception ex)
