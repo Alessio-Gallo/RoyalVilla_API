@@ -80,7 +80,10 @@
 
                                     @* Name *@
                                     <td class="align-middle fw-medium">
-                                        @villa.Name
+                                        <a asp-action="Edit" asp-route-id="@villa.Id"
+                                        class="link-dark link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                                            @villa.Name
+                                        </a>
                                     </td>
 
                                     @* Details *@
