@@ -4,48 +4,91 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RoyalVillaWeb</title>
+
     <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/RoyalVillaWeb.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RoyalVillaWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <nav class="navbar mb-3" style="background-color: #eee8dc; height:100px;">
+            <div class="container d-flex flex-row justify-content-start w-100">
+
+                <!-- Left: Logo -->
+                <a class="text-decoration-none text-dark d-flex justify-content-start align-items-center fw-medium" 
+                    asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door-fill p-2" style="font-size: 35px;"></i>
+                    <div class="d-flex flex-column p-2">
+                        <span class="fs-big" style="font-family: 'Times New Roman', Times, serif; font-size:28px;">RoyalVilla</span>
+                        <span class="fw-normal" style="font-size:small; letter-spacing: .2rem">EXCLUSIVE STAYS</span>
+                    </div>
+                </a>
+
+                <!-- Center: Navigation links -->
+                <div class="d-flex align-items-center">
+                    <ul class="d-flex flex-row list-unstyled mx-5 p-2 mb-0 fw-medium">
+                        <li class="mx-2">
+                            <a class="text-dark text-decoration-none
+                                @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                            asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Villa" asp-action="Index">
-                                <i class="bi bi-house-gear m-1"></i>Villa Management</a>
+
+                        <li class="mx-3">
+                            <a class="text-dark text-decoration-none
+                                @(ViewContext.RouteData.Values["controller"]?.ToString() == "Villa" ? "active" : "")"
+                            asp-controller="Villa"
+                            asp-action="Index">
+                                Villa Management
+                            </a>
                         </li>
                     </ul>
                 </div>
+
+                <!-- Right: Reserved for authentication -->
+                <div class="nav-account" aria-label="Account area">
+                    @* Add Login, Register, or user information here later. *@
+                </div>
+
             </div>
         </nav>
     </header>
-    <div >
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - RoyalVillaWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Main content -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark mt-5 ">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-4 gap-3">
+
+            <div class="text-center text-md-start">
+                <a class="text-decoration-none text-light d-inline-flex align-items-center gap-2"
+                asp-controller="Home"
+                asp-action="Index"
+                style="font-size: larger;">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span>RoyalVilla</span>
+                </a>
+
+                <p class="text-light-emphasis mt-2 mb-0">
+                    Exceptional villas. Extraordinary stays.
+                </p>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <span class="text-light" aria-hidden="true">|</span>
+
+                <span class="text-light">
+                    &copy; @DateTime.Now.Year RoyalVillaWeb
+                </span>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
