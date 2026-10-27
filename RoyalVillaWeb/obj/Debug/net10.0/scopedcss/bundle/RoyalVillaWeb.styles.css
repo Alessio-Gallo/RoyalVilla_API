@@ -170,20 +170,19 @@ body[b-420y0b834v] {
     display: flex;
     margin-top: auto;
     padding: 10px;
-    border-top: 1px solid #d3d3d3;
+    /* border-top: 1px solid #e1c48e; */
+    background-color: #e1c48e;
+    border-radius: 10px;
 }
 
 [b-420y0b834v] .villa-details-link {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
+    color: #192a22;
     width: 100%;
-}
-
-[b-420y0b834v] .villa-details-link:hover {
-    transform: translateX(4px);
 }
 
 .royal-empty[b-420y0b834v] {
