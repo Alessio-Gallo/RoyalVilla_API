@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalVilla.DTO;
 using RoyalVillaWeb.Models;
@@ -12,6 +13,7 @@ public class HomeController(IVillaService villaService, IMapper mapper) : Contro
     private readonly IVillaService _villaService = villaService; 
     private readonly IMapper _mapper = mapper; 
 
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         List<VillaDTO> villaList = [];

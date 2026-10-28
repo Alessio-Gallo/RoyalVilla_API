@@ -24,7 +24,6 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\rjsm
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\bundle\RoyalVillaWeb.styles.css
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\projectbundle\RoyalVillaWeb.bundle.scp.css
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jb8rj1yvv1-{0}-b9sayid5wm-b9sayid5wm.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\z2ajmsfrf4-{0}-61n19gt1b8-61n19gt1b8.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jkiff15zns-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\ktqc57vzbl-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -103,5 +102,8 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Micr
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\Views\Home\Index.cshtml.rz.scp.css
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-7z6m6yg984-7z6m6yg984.gz
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-7z6m6yg984-7z6m6yg984.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-0feczbh1gv-0feczbh1gv.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-0feczbh1gv-0feczbh1gv.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jb8rj1yvv1-{0}-5445qh7z3k-5445qh7z3k.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll

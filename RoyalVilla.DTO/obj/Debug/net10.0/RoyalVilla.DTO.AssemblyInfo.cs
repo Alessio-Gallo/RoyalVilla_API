@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RoyalVilla.DTO")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7874aa70bb5c469eb02998ab4ed73d827d6961ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+534003262be36407f7dadd8c1712f850878d9bbe")]
 [assembly: System.Reflection.AssemblyProductAttribute("RoyalVilla.DTO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RoyalVilla.DTO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
