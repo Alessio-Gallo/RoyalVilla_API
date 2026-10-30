@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,9 +18,9 @@
     <header>
         <nav class="navbar mb-3" style="background-color: #eee8dc; height:100px;">
 
-            <div class="d-flex flex-row justify-content-between w-100 ">
+            <div class="d-flex flex-row justify-content-between w-100">
                 <div class="container d-flex flex-row justify-content-start align-items-center">
-                    <!-- Left: Logo -->
+                    @*  Left: Logo  *@
                     <a class="text-decoration-none text-dark d-flex justify-content-start align-items-center fw-medium" 
                         asp-controller="Home" asp-action="Index">
                         <i class="bi bi-house-door-fill p-2" style="font-size: 35px;"></i>
@@ -29,7 +30,7 @@
                         </div>
                     </a>
 
-                    <!-- Center: Navigation links -->
+                    @*  Center: Navigation links  *@
                     <div style="font-size: large;">
                         <ul class="d-flex flex-row list-unstyled mx-5 p-2 mb-0 fw-medium">
                             <li class="mx-2">
@@ -50,23 +51,50 @@
                     </div>
                 </div>
 
-                <div class="d-flex flex-row gap-3 align-items-center mx-3 p-2">
-                    <a asp-controller="Auth" asp-action="Login"
-                    class="p-2 text-decoration-none fw-medium btn bg-dark"
-                        style="font-size:large; border-radius:10px; color: white;">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </a>
-                    <a asp-controller="Auth" asp-action="Register"
-                    class="p-2 text-decoration-none fw-medium btn bg-dark" 
-                     style="font-size:large; border-radius:10px; color:white;">
-                        <i class="bi bi-person-plus"></i> Register
-                    </a>
+                @* Authentication links *@
+                <div class="d-flex flex-row align-items-center justify-content-center">
+                    <ul class="list-unstyled d-flex flex-row gap-3 mb-0 mx-3">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="dropdown">
+                                <a class="p-2 text-decoration-none fw-medium btn bg-dark dropdown-toggle rounded-3 text-white" 
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle mx-2"></i>@User.FindFirst(ClaimTypes.Email)?.Value
+                                </a>
+                                <ul class="dropdown-menu p-0 w-50 justify-content-end w-100">
+                                    <li>
+                                        <a class="dropdown-item text-danger border-danger bg-light fw-medium rounded-2 d-flex flex-row gap-2 p-2"
+                                        asp-controller="Auth" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-in-right"></i> Logout 
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="Auth" asp-action="Login"
+                                class="p-2 text-decoration-none fw-medium btn bg-dark text-white rounded-3"
+                                style="font-size:large;">
+                                    <i class="bi bi-box-arrow-in-right"></i> Login
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Auth" asp-action="Register"
+                                class="p-2 text-decoration-none fw-medium btn bg-dark text-white rounded-3" 
+                                style="font-size:large;">
+                                    <i class="bi bi-person-plus"></i> Register
+                                </a>   
+                            </li> 
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Main content -->
+    @*  Main content  *@
     <main role="main">
         @RenderBody()
     </main>

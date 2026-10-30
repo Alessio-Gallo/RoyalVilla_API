@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using RoyalVilla_API.Data;
 using RoyalVilla_API.Models;
 using RoyalVilla.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RoyalVilla_API.Controllers;
 
 [Route("api/villa")]
 [ApiController]
+[Authorize]
 // [Authorize(Roles = "Customer,Admin")]
 public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
 {
@@ -74,6 +76,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Create a record
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
@@ -120,6 +123,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Update a record
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
@@ -179,6 +183,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Delete a record
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]

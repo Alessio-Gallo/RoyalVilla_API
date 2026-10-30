@@ -19,15 +19,14 @@ namespace RoyalVillaWeb.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequestDTO loginRequestDTO)
         {
             try
             {
-                var response = await _authService
-                    .LoginAsync<ApiResponse<LoginResponseDTO>>(loginRequestDTO);
+                // Get the response
+                var response = await _authService.LoginAsync<ApiResponse<LoginResponseDTO>>(loginRequestDTO);
 
                 if (response != null && response.Success && response.Data != null)
                 {
@@ -52,23 +51,24 @@ namespace RoyalVillaWeb.Controllers
                     }
 
                     // Create the identity for cookie authentication
-                    var identity = new ClaimsIdentity(
-                        CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    identity.AddClaim(new Claim(ClaimTypes.Email, email));
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaims([
+                        new Claim(ClaimTypes.Email, email),
+                        new Claim(ClaimTypes.Role, role)
+                    ]);
 
                     var principal = new ClaimsPrincipal(identity);
 
                     // Sign the user in
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        principal);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+                    HttpContext.Session.SetString(SD.SessionToken, loginResponseDTO.Token);
                     return RedirectToAction(nameof(Index), "Home");
                 }
-
-                TempData["error"] = response?.Message ?? "Invalid email or password.";
+                else
+                {
+                    TempData["error"] = response?.Message ?? "Invalid email or password.";   
+                }
             }
             catch (Exception ex)
             {
@@ -115,17 +115,16 @@ namespace RoyalVillaWeb.Controllers
             }
             return View();
         }
-
         
         public IActionResult AccessDenied()
         {
             return View();
         }
 
-
         public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -3,8 +3,8 @@ using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
 
-public class VillaService(IHttpClientFactory httpClientFactory) : 
-    BaseService(httpClientFactory), IVillaService
+public class VillaService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor) : 
+    BaseService(httpClientFactory, httpContextAccessor), IVillaService
 {
     private const string APIEndpoint = "/api/villa";
 

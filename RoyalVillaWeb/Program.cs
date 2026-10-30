@@ -30,8 +30,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
         options.SlidingExpiration = true;
         options.LoginPath = "/auth/login";
-        options.AccessDeniedPath = "/accessdenied";
+        options.AccessDeniedPath = "/auth/accessdenied";
     });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+   options.IdleTimeout = TimeSpan.FromMinutes(60);
+   options.Cookie.HttpOnly = true; 
+   options.Cookie.IsEssential = true; 
+});
 
 var app = builder.Build();
 
@@ -45,7 +54,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

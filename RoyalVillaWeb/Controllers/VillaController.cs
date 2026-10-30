@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoyalVilla.DTO;
 using RoyalVillaWeb.Models;
@@ -33,6 +34,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
 
     // Create page
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
@@ -41,6 +43,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(VillaCreateDTO createDTO)
     {
         if(!ModelState.IsValid)
@@ -69,6 +72,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
 
     // Edit page
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
         if(id <= 0)
@@ -96,6 +100,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(VillaUpdateDTO updateDTO)
     {
         try
@@ -113,6 +118,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
         return RedirectToAction(nameof(Index));; 
     }
 
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         if(id <= 0)
@@ -138,6 +144,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(VillaDTO villaDTO)
     {
         try

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Home";
 }
 
-<!-- Hero section -->
+@*  Hero section  *@
 <section class="container royal-hero">
     <div class="container royal-hero-content">
         <h1>
@@ -24,14 +24,11 @@
     </div>
 </section>
 
-<!-- Elenco dinamico delle ville -->
+@*  Elenco dinamico delle ville  *@
 <section id="ville" class="container royal-villas">
-    <div class="royal-section-heading">
-        <div>
-            <h2>Villas selected for you</h2>
-        </div>
-
-        <span class="royal-villa-count">@(Model?.Count() ?? 0) results</span>
+    <div class="royal-section-heading py-2 align-items-center">
+        <h2>Villas selected for you</h2>
+        <span style="font-size: large;">@(Model?.Count() ?? 0) results</span>
     </div>
 
     @if (TempData["error"] != null)
@@ -51,6 +48,10 @@
     }
     else
     {
+        @if(Model.Count() > 0)
+        {
+            
+        }
         <div class="row g-4">
             @foreach (var villa in Model)
             {
@@ -88,7 +89,7 @@
 
                             <div class="villa-card-footer">
                                 <a asp-controller="Villa" asp-action="Details" asp-route-id="@villa.Id" 
-                                class="villa-details-link btn"> Explore <i class="bi bi-arrow-right"></i></a>
+                                class="villa-details-link"> Explore <i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     </article>
@@ -98,7 +99,9 @@
     }
 </section>
 
-@if (Model != null){
+@* Statistics *@
+@if (Model != null && Model.Count() > 0)
+{
     <section class="container">
         <div class="row mb-5">
             <div class="col-12">
@@ -106,6 +109,7 @@
                     <div class="card-body p-4">
                         <h3 class="text-center mb-4"> At a Glance</h3>
                         <div class="row text-center g-4">
+
                             @* Total villas *@
                             <div class="col-md-3">
                                 <div class="stat-item">

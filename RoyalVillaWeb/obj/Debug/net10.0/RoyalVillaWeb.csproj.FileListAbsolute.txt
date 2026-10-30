@@ -102,8 +102,8 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Micr
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\scopedcss\Views\Home\Index.cshtml.rz.scp.css
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-0feczbh1gv-0feczbh1gv.gz
-D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-0feczbh1gv-0feczbh1gv.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jb8rj1yvv1-{0}-5445qh7z3k-5445qh7z3k.gz
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\jof9p90t0a-{0}-ztlbl880de-ztlbl880de.gz
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVillaWeb\obj\Debug\net10.0\compressed\3uw4fm7ggx-{0}-ztlbl880de-ztlbl880de.gz

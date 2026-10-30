@@ -4,8 +4,8 @@ using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
 
-public class AuthService(IHttpClientFactory httpClientFactory) : 
-    BaseService(httpClientFactory), IAuthService
+public class AuthService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor) : 
+    BaseService(httpClientFactory, httpContextAccessor), IAuthService
 {
     private const string APIEndpoint = "/api/auth";
     
