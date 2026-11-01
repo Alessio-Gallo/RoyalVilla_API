@@ -19,7 +19,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
         List<VillaDTO> villaList = [];
         try
         {
-            var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>("");
+            var response = await _villaService.GetAllAsync<ApiResponse<List<VillaDTO>>>();
             if(response != null && response.Success && response.Data != null)
             {
                 villaList = response.Data; 
@@ -53,7 +53,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
         
         try
         {
-            var response = await _villaService.CreateAsync<ApiResponse<VillaDTO>>(createDTO, "");
+            var response = await _villaService.CreateAsync<ApiResponse<VillaDTO>>(createDTO);
 
             if(response != null && response.Success && response.Data != null)
             {
@@ -83,7 +83,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
         try
         {
-            var response = await _villaService.GetAsync<ApiResponse<VillaDTO>>(id, "");
+            var response = await _villaService.GetAsync<ApiResponse<VillaDTO>>(id);
             if(response != null && response.Success && response.Data != null)
             {
                 return View(_mapper.Map<VillaUpdateDTO>(response.Data));
@@ -105,7 +105,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
     {
         try
         {
-            var response = await _villaService.UpdateAsync<ApiResponse<VillaDTO>>(updateDTO, "");
+            var response = await _villaService.UpdateAsync<ApiResponse<VillaDTO>>(updateDTO);
             if(response != null && response.Success)
             {
                 TempData["success"] = "Villa updated successfully";
@@ -128,7 +128,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
 
         try
         {
-            var response = await _villaService.GetAsync<ApiResponse<VillaDTO>>(id, "");
+            var response = await _villaService.GetAsync<ApiResponse<VillaDTO>>(id);
             if(response != null && response.Success && response.Data != null)
             {
                 return View(response.Data);
@@ -149,7 +149,7 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
     {
         try
         {
-            var response = await _villaService.DeleteAsync<ApiResponse<VillaDTO>>(villaDTO.Id, "");
+            var response = await _villaService.DeleteAsync<ApiResponse<VillaDTO>>(villaDTO.Id);
             
             if(response != null && response.Success)
             {
