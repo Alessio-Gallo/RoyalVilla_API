@@ -8,6 +8,8 @@
     ".NETCoreApp,Version=v10.0": {
       "RoyalVilla_API/1.0.0": {
         "dependencies": {
+          "Asp.Versioning.Mvc": "10.2.1",
+          "Asp.Versioning.Mvc.ApiExplorer": "10.2.1",
           "AutoMapper": "16.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.13",
           "Microsoft.AspNetCore.OpenApi": "10.0.12",
@@ -19,6 +21,47 @@
         },
         "runtime": {
           "RoyalVilla_API.dll": {}
+        }
+      },
+      "Asp.Versioning.Abstractions/10.2.1": {
+        "runtime": {
+          "lib/net10.0/Asp.Versioning.Abstractions.dll": {
+            "assemblyVersion": "10.2.0.0",
+            "fileVersion": "10.2.9714.15149"
+          }
+        }
+      },
+      "Asp.Versioning.Http/10.2.1": {
+        "dependencies": {
+          "Asp.Versioning.Abstractions": "10.2.1"
+        },
+        "runtime": {
+          "lib/net10.0/Asp.Versioning.Http.dll": {
+            "assemblyVersion": "10.2.0.0",
+            "fileVersion": "10.2.9714.15157"
+          }
+        }
+      },
+      "Asp.Versioning.Mvc/10.2.1": {
+        "dependencies": {
+          "Asp.Versioning.Http": "10.2.1"
+        },
+        "runtime": {
+          "lib/net10.0/Asp.Versioning.Mvc.dll": {
+            "assemblyVersion": "10.2.0.0",
+            "fileVersion": "10.2.9714.15157"
+          }
+        }
+      },
+      "Asp.Versioning.Mvc.ApiExplorer/10.2.1": {
+        "dependencies": {
+          "Asp.Versioning.Mvc": "10.2.1"
+        },
+        "runtime": {
+          "lib/net10.0/Asp.Versioning.Mvc.ApiExplorer.dll": {
+            "assemblyVersion": "10.2.0.0",
+            "fileVersion": "10.2.9714.15157"
+          }
         }
       },
       "AutoMapper/16.2.0": {
@@ -631,6 +674,34 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Asp.Versioning.Abstractions/10.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jMBztsVim+rYVrkNY23dMuOjTGXGQ9+je1xb3i17KgUof7OcBZtMMDduEWoCQ52SpTlYqKsuzgJyUMCMOFCBfg==",
+      "path": "asp.versioning.abstractions/10.2.1",
+      "hashPath": "asp.versioning.abstractions.10.2.1.nupkg.sha512"
+    },
+    "Asp.Versioning.Http/10.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XaVOKS4AV6a6JdFsiuyLkNwU0ilWhUK2U71mBEXJsgi5AGpo24UkfZ4KUhpRGpuMmQNrugS7yxCIscGcnujdFA==",
+      "path": "asp.versioning.http/10.2.1",
+      "hashPath": "asp.versioning.http.10.2.1.nupkg.sha512"
+    },
+    "Asp.Versioning.Mvc/10.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fMzUraYZOAobKQn2PffrgPsULbCWFeWroYRYndPasxPsiQl1+i8x5qYRuMYZAbzDrBnymPUMBxT2gZG2PwbkcQ==",
+      "path": "asp.versioning.mvc/10.2.1",
+      "hashPath": "asp.versioning.mvc.10.2.1.nupkg.sha512"
+    },
+    "Asp.Versioning.Mvc.ApiExplorer/10.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Tv1megkpUy+3FN9yfVJKIcYMLXTe5CPs4zftBxGaZhADJe6h9CJZ2Okh5cG4PoE7wzHTef+AK++8IuZta3Ppog==",
+      "path": "asp.versioning.mvc.apiexplorer/10.2.1",
+      "hashPath": "asp.versioning.mvc.apiexplorer.10.2.1.nupkg.sha512"
     },
     "AutoMapper/16.2.0": {
       "type": "package",

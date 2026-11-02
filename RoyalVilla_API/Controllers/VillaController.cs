@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RoyalVilla_API.Controllers;
 
-[Route("api/villa")]
 [ApiController]
+[Route("api/villa")]
 [Authorize]
 // [Authorize(Roles = "Customer,Admin")]
 public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
