@@ -11,7 +11,7 @@ namespace RoyalVilla_API.Controllers;
 
 [ApiController]
 [Route("api/villa")]
-[Authorize]
+//[Authorize]
 // [Authorize(Roles = "Customer,Admin")]
 public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
 {
@@ -20,19 +20,76 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Get all the records
     [HttpGet]
-    // [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas()
+    public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas([FromQuery] string? filterBy, 
+        [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] string? sortOrder = "asc")
     {
-        var villas = await _dbContext.Villa
-            .AsNoTracking()
-            .ToListAsync();
+        var villasQuery = _dbContext.Villa.AsQueryable();
+        if(!string.IsNullOrEmpty(filterBy) && !string.IsNullOrEmpty(filterQuery))
+        {
+            switch (filterBy.ToLower())
+            {
+                case "name":
+                    villasQuery = villasQuery.Where(v => v.Name.ToLower().Contains(filterQuery.ToLower()));
+                    break;
+                case "details":
+                    villasQuery = villasQuery.Where(v => v.Details.ToLower().Contains(filterQuery.ToLower()));
+                    break;
+                case "rate":
+                    if(double.TryParse(filterQuery, out double rate)){
+                        villasQuery = villasQuery.Where(v => v.Rate == rate);
+                    }
+                    break;
+                case "minrate":
+                    if(double.TryParse(filterQuery, out double minrate)){
+                        villasQuery = villasQuery.Where(v => v.Rate >= minrate);
+                    }
+                    break;
+                case "maxrate":
+                    if(double.TryParse(filterQuery, out double maxrate)){
+                        villasQuery = villasQuery.Where(v => v.Rate <= maxrate);
+                    }
+                    break;
+                case "occupancy":
+                    if(int.TryParse(filterQuery, out int occupancy)){
+                        villasQuery = villasQuery.Where(v => v.Occupancy == occupancy);
+                    }
+                    break;
+            }
+        }
+
+        // Sorting logic 
+        if(!string.IsNullOrEmpty(sortBy))
+        {
+            var isDescending = sortOrder?.ToLower() == "desc";
+
+            villasQuery = sortBy.ToLower() switch
+            {
+                "name" => isDescending ? villasQuery.OrderByDescending(v => v.Name) 
+                : villasQuery.OrderBy(v => v.Name), 
+                "rate" => isDescending ? villasQuery.OrderByDescending(v => v.Rate) 
+                : villasQuery.OrderBy(v => v.Rate), 
+                "occupancy" => isDescending ? villasQuery.OrderByDescending(v => v.Occupancy) 
+                : villasQuery.OrderBy(v => v.Occupancy), 
+                "sqft" => isDescending ? villasQuery.OrderByDescending(v => v.Sqft) 
+                : villasQuery.OrderBy(v => v.Sqft), 
+                "id" => isDescending ? villasQuery.OrderByDescending(v => v.Id) 
+                : villasQuery.OrderBy(v => v.Id), 
+                _ => isDescending ? villasQuery.OrderByDescending(v => v.Id) 
+                : villasQuery.OrderBy(v => v.Id),                  
+            };
+        }
+        else
+        {
+           villasQuery = villasQuery.OrderBy(v => v.Id);
+        }
+
+        var villas = await villasQuery.ToListAsync();
         
+
         var responseData = _mapper.Map<List<VillaDTO>>(villas); 
-        var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(
-            responseData, "Villas retrieved successfully"
-        );
+        var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(responseData, "Villas retrieved successfully");
 
         return Ok(response); 
     } 
@@ -40,7 +97,6 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Get a record
     [HttpGet("{id:int}")]
-    // [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
