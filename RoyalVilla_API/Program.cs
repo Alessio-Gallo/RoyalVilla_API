@@ -8,6 +8,7 @@ using RoyalVilla_API.Models;
 using RoyalVilla.DTO;
 using RoyalVilla_API.Services;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ var key = Encoding.ASCII.GetBytes(
         throw new InvalidOperationException("JWT secret is not configured")
 );
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

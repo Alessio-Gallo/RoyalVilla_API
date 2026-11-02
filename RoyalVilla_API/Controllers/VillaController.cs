@@ -22,9 +22,15 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<VillaDTO>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas([FromQuery] string? filterBy, 
-        [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] string? sortOrder = "asc")
+    public async Task<ActionResult<ApiResponse<IEnumerable<VillaDTO>>>> GetVillas(
+        [FromQuery] string? filterBy, [FromQuery] string? filterQuery, 
+        [FromQuery] string? sortBy, [FromQuery] string? sortOrder = "asc",
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
+        if(page < 1) page = 1;
+        if(pageSize < 1) pageSize = 10; 
+        if(pageSize > 100) pageSize = 100; 
+     
         var villasQuery = _dbContext.Villa.AsQueryable();
         if(!string.IsNullOrEmpty(filterBy) && !string.IsNullOrEmpty(filterQuery))
         {
@@ -85,12 +91,34 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
            villasQuery = villasQuery.OrderBy(v => v.Id);
         }
 
-        var villas = await villasQuery.ToListAsync();
+        var skip = (page-1) * pageSize; 
+        var totalCount = await villasQuery.CountAsync();
+        var totalPages = (int) Math.Ceiling((double) totalCount / pageSize);
+
+        var villas = await villasQuery.Skip(skip).Take(pageSize).ToListAsync();
+        var dtoResponseVilla = _mapper.Map<List<VillaDTO>>(villas);
         
+        // Descriptive message
 
+        var messageBuilder = new System.Text.StringBuilder();
+        messageBuilder.Append($"Successfully retrieved {dtoResponseVilla.Count} villa(s)");
+        messageBuilder.Append($"(Page {page} of {totalPages}, {totalCount} total records");
+
+        if(!string.IsNullOrEmpty(filterQuery) && !string.IsNullOrEmpty(filterBy))
+        {
+            messageBuilder.Append($" filtered by {filterBy}: '{filterQuery}'");
+        }
+        if(!string.IsNullOrEmpty(sortBy))
+        {
+            messageBuilder.Append($" sorted by {sortBy}: '{sortOrder?.ToLower() ?? "asc"}'");
+        }
+
+        Response.Headers.Append("X-Pagination-CurrentPage", page.ToString());
+        Response.Headers.Append("X-Pagination-PageSize", pageSize.ToString());
+        Response.Headers.Append("X-Pagination-TotalCount", totalCount.ToString());
+        Response.Headers.Append("X-Pagination-TotalPages", totalPages.ToString());
         var responseData = _mapper.Map<List<VillaDTO>>(villas); 
-        var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(responseData, "Villas retrieved successfully");
-
+        var response = ApiResponse<IEnumerable<VillaDTO>>.Ok(responseData, messageBuilder.ToString());
         return Ok(response); 
     } 
 
