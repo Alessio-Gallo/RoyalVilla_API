@@ -36,15 +36,12 @@ namespace RoyalVillaWeb.Controllers
                     var jwt = handler.ReadJwtToken(loginResponseDTO.Token);
 
                     // Read the email and role claims from the JWT
-                    var email = jwt.Claims.FirstOrDefault(c =>
-                        c.Type == ClaimTypes.Email || c.Type == "email")?.Value;
+                    var email = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email || c.Type == "email")?.Value;
 
-                    var role = jwt.Claims.FirstOrDefault(c =>
-                        c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
+                    var role = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
 
                     // Make sure the required claims exist
-                    if (string.IsNullOrWhiteSpace(email) ||
-                        string.IsNullOrWhiteSpace(role))
+                    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(role))
                     {
                         TempData["error"] = "Login failed: email or role claim is missing.";
                         return View(loginRequestDTO);
@@ -67,7 +64,7 @@ namespace RoyalVillaWeb.Controllers
                 }
                 else
                 {
-                    TempData["error"] = response?.Message ?? "Invalid email or password.";   
+                    TempData["error"] = response?.Message ?? "Invalid email or password.";
                 }
             }
             catch (Exception ex)

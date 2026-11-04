@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace RoyalVilla.DTO;
 
@@ -12,4 +13,6 @@ public class VillaCreateDTO
     public int? Sqft { get; set; }
     public int? Occupancy { get; set; }
     public string? ImageUrl { get; set; }
+    public IFormFile? Image { get; set; }
+
 }

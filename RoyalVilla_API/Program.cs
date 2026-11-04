@@ -9,6 +9,7 @@ using RoyalVilla.DTO;
 using RoyalVilla_API.Services;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using RoyalVilla_API.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ var key = Encoding.ASCII.GetBytes(
         throw new InvalidOperationException("JWT secret is not configured")
 );
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -36,14 +37,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(); 
 
-// Add services to the container.
+builder.Services.AddScoped<IImageService, ImageService>();
+
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, CancellationToken) =>
@@ -77,7 +78,7 @@ builder.Services.AddAutoMapper(o =>
     o.CreateMap<Villa, VillaCreateDTO>().ReverseMap();
     o.CreateMap<Villa, VillaUpdateDTO>().ReverseMap();
     o.CreateMap<Villa, VillaDTO>().ReverseMap();
-    o.CreateMap<User, UserDTO>().ReverseMap();
+    o.CreateMap<ApplicationUser, UserDTO>().ReverseMap();
     o.CreateMap<VillaAmenitiesCreateDTO, VillaAmenities>().ReverseMap();
     o.CreateMap<VillaAmenitiesUpdateDTO, VillaAmenities>().ReverseMap();
     o.CreateMap<VillaAmenities, VillaAmenitiesDTO>()
@@ -104,6 +105,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseStaticFiles();
 app.UseCors(o => o.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("*"));
 app.UseHttpsRedirection();
 app.UseAuthentication();

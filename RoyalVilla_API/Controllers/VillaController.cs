@@ -6,6 +6,7 @@ using RoyalVilla_API.Data;
 using RoyalVilla_API.Models;
 using RoyalVilla.DTO;
 using Microsoft.AspNetCore.Authorization;
+using RoyalVilla_API.Services.IServices;
 
 namespace RoyalVilla_API.Controllers;
 
@@ -13,10 +14,12 @@ namespace RoyalVilla_API.Controllers;
 [Route("api/villa")]
 //[Authorize]
 // [Authorize(Roles = "Customer,Admin")]
-public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : ControllerBase
+public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
     private readonly IMapper _mapper = mapper; 
+    private readonly IImageService _imageService = imageService; 
+
 
     // Get all the records
     [HttpGet]
@@ -160,18 +163,18 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Create a record
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla(VillaCreateDTO dto)  
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> CreateVilla([FromForm] VillaCreateDTO dto)  
     {
         try
         {
             // Check for dups
-            var isDuplicate = await _dbContext.Villa
-                .AnyAsync(v => v.Name.ToLower() == dto.Name.ToLower());
+            var isDuplicate = await _dbContext.Villa.AnyAsync(v => v.Name.ToLower() == dto.Name.ToLower());
 
             if(isDuplicate)
             {
@@ -183,6 +186,15 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
             // Explicit cast to Villa using AutoMapper
             Villa villa = _mapper.Map<Villa>(dto);
             villa.CreatedDate = DateTime.UtcNow; 
+
+            if(dto.Image != null)
+            {
+                if(!_imageService.ValidateImage(dto.Image))
+                {
+                    return BadRequest(ApiResponse<VillaDTO>.BadRequest("Invalid image file. Check image dimension or format. Allowed formats are: jpg, jpeg, png"));
+                }
+                villa.ImageUrl = await _imageService.UploadImageAsync(dto.Image);
+            }
 
             _dbContext.Villa.Add(villa);
             await _dbContext.SaveChangesAsync();
@@ -207,21 +219,30 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Update a record
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, VillaUpdateDTO dto)
+    public async Task<ActionResult<ApiResponse<VillaDTO>>> UpdateVilla(int id, [FromForm] VillaUpdateDTO dto)
     {
         try
         {
             if (id != dto.Id)
             {
                 return BadRequest(ApiResponse<VillaDTO>.BadRequest(
-                    "Villa ID in the URL does not match Villa ID in the request body")
-                );
+                    "Villa ID in the URL does not match Villa ID in the request body"
+                ));
+            }
+
+            // Validate image only when a new image is provided
+            if (dto.Image != null && !_imageService.ValidateImage(dto.Image))
+            {
+                return BadRequest(ApiResponse<VillaDTO>.BadRequest(
+                    "Invalid image file. Allowed formats: 'jpg, jpeg, png'. Max size is 5MB."
+                ));
             }
 
             var existingVilla = await _dbContext.Villa.FindAsync(id);
@@ -229,11 +250,11 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
             if (existingVilla == null)
             {
                 return NotFound(ApiResponse<VillaDTO>.NotFound(
-                    $"Villa with ID='{id}' was not found")
-                );
+                    $"Villa with ID='{id}' was not found"
+                ));
             }
 
-            // Check for dups
+            // Check for duplicate names
             var isDuplicate = await _dbContext.Villa
                 .AnyAsync(v => v.Id != id && v.Name.ToLower() == dto.Name.ToLower());
 
@@ -244,13 +265,28 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
                 ));
             }
 
+            var oldImageUrl = existingVilla.ImageUrl; 
+
             _mapper.Map(dto, existingVilla);
             existingVilla.UpdateDate = DateTime.UtcNow;
 
-            await _dbContext.SaveChangesAsync();
+            // Replace image only if a new one was provided
+            if(dto.Image != null)
+            {
+                existingVilla.ImageUrl = await _imageService.UploadImageAsync(dto.Image);
+                dto.ImageUrl = existingVilla.ImageUrl;
 
+                if(!string.IsNullOrEmpty(oldImageUrl) && oldImageUrl != existingVilla.ImageUrl)
+                {
+                    await _imageService.DeleteImageAsync(oldImageUrl);
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+            
             return Ok(ApiResponse<VillaDTO>.Ok(
-                _mapper.Map<VillaDTO>(existingVilla), "Villa updated successfully"
+                _mapper.Map<VillaDTO>(existingVilla), 
+                "Villa updated successfully"
             ));
         }
         catch (Exception ex)
@@ -267,7 +303,8 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
 
     // Delete a record
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
@@ -275,17 +312,25 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper) : C
     {
         try
         {
-            var existingVilla = await _dbContext.Villa.FindAsync(id);
+            var existingVilla = await _dbContext.Villa.FirstOrDefaultAsync(u => u.Id == id);
 
-            if(existingVilla == null) {
-                return NotFound(ApiResponse<VillaDTO>.NotFound($"Villa with ID={id} was not found"));
+            if (existingVilla == null)
+            {
+                return NotFound(ApiResponse<object>.NotFound($"Villa with ID {id} was not found"));
             }
 
+
+            if (!string.IsNullOrEmpty(existingVilla.ImageUrl))
+            {
+                await _imageService.DeleteImageAsync(existingVilla.ImageUrl);
+            }
+            
             _dbContext.Villa.Remove(existingVilla);
             await _dbContext.SaveChangesAsync();
 
-            var response = ApiResponse<VillaDTO>.NoContent("Villa deleted successfully");
-            return Ok(response); 
+            var response = ApiResponse<object>.NoContent("Villa deleted successfully");
+            return Ok(response);
+
         }
         catch (Exception ex)
         {

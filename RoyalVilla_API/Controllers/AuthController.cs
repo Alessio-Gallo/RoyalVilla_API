@@ -74,7 +74,7 @@ public class AuthController(IAuthService authService, IMapper mapper) : Controll
 
             if(loginResponse == null)
             {
-                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Login failed"));
+                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Login failed. Please check your credentials."));
             }
 
             // Login OK 

@@ -139,3 +139,4 @@ D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Asp
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Asp.Versioning.Mvc.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Asp.Versioning.Mvc.ApiExplorer.dll
 D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\WebDev\RESTful-api\part_1\RoyalVilla_API\RoyalVilla_API\bin\Debug\net10.0\RoyalVilla_API.staticwebassets.runtime.json

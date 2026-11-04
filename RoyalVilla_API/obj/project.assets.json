@@ -942,7 +942,10 @@
         },
         "runtime": {
           "bin/placeholder/RoyalVilla.DTO.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
