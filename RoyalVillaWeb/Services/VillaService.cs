@@ -1,4 +1,5 @@
 using RoyalVilla.DTO;
+using RoyalVillaWeb.Extensions;
 using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
@@ -10,10 +11,11 @@ public class VillaService(IHttpClientFactory httpClientFactory, IHttpContextAcce
 
     public Task<T?> CreateAsync<T>(VillaCreateDTO dto)
     {
+        var formData = dto.ToMultipartFormData();
         return SendAsync<T>(new ApiRequest
         {
             ApiType = SD.ApiType.POST,
-            Data = dto, 
+            Data = formData, 
             Url = $"{APIEndpoint}"
         });
     }
@@ -47,10 +49,11 @@ public class VillaService(IHttpClientFactory httpClientFactory, IHttpContextAcce
 
     public Task<T?> UpdateAsync<T>(VillaUpdateDTO dto)
     {
+        var formData = dto.ToMultipartFormData();
         return SendAsync<T>(new ApiRequest
         {
             ApiType = SD.ApiType.PUT,
-            Data = dto, 
+            Data = formData, 
             Url = $"{APIEndpoint}/{dto.Id}"
         });
     }

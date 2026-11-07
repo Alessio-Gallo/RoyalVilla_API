@@ -58,10 +58,11 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <article class="villa-card">
 
+                        @* Card Image *@
                         <div class="villa-card-image">
                             @if (!string.IsNullOrWhiteSpace(villa.ImageUrl))
                             {
-                                <img src="@villa.ImageUrl" alt="@villa.Name" loading="lazy" />
+                                <img src="@SD.GetImageUrl(villa.ImageUrl)" alt="@villa.Name" loading="lazy" />
                             }
                             else
                             {
@@ -69,6 +70,7 @@
                             }                           
                         </div>
 
+                        @* Card body *@
                         <div class="villa-card-body">
                             <div class="villa-card-title">
                                 <h3>@villa.Name</h3>
@@ -87,6 +89,7 @@
                                 </span>
                             </div>
 
+                            @* Explore button *@
                             <div class="villa-card-footer">
                                 <a asp-controller="Villa" asp-action="Details" asp-route-id="@villa.Id" 
                                 class="villa-details-link"> Explore <i class="bi bi-arrow-right"></i></a>
@@ -137,7 +140,7 @@
                                 </div>
                             </div>
 
-                            @* Max occupancy *@
+                            @* Total Square Feet *@
                             <div class="col-md-3">
                                 <div class="stat-item">
                                     <i class="bi bi-arrows-fullscreen text-warning fs-1 mb-3"></i>

@@ -16,9 +16,11 @@
                 
                 @* Card body *@
 				<div class="card-body">
-
 					<form method="post" enctype="multipart/form-data">
-                        <p class="text-muted small">Fields marked with <span class="text-danger">*</span> are required</p>
+						<input type="hidden" asp-action="Id"/>
+						<input type="hidden" asp-action="ImageUrl"/>
+                        
+						<p class="text-muted small">Fields marked with <span class="text-danger">*</span> are required</p>
 
 						@* Villa Name *@
 						<div class="mb-3">
@@ -67,16 +69,22 @@
 							<span asp-validation-for="Sqft" class="text-danger small"></span>
 						</div>
 
-						<div class="mb-3">
-							<label asp-for="ImageUrl" class="form-label">Villa Image</label>
-							<input asp-for="ImageUrl" class="form-control" accept="image/*" onchange="previewImage(this)"
-								   placeholder="Link to image" />
-							<span asp-validation-for="ImageUrl" class="text-danger small"></span>
-							<small class="form-text text-muted">Supported formats: JPG, JPEG, PNG (Max 5MB)</small>
-						</div>
+						@* Image Preview *@
+						@if(!string.IsNullOrEmpty(Model.ImageUrl)) 
+						{
+							<div id="imagePreview" class="mt-3 mb-3 d-flex flex-column align-items-center">
+								<label>Current Image</label>
+								<img src="@SD.GetImageUrl(Model.ImageUrl)" id="preview" class="img-thumbnail" style="max-width:400px;max-height:400px;" />
+							</div>	
+						}
 
-						<div id="imagePreview" class="mt-3">
-							<img src="@Model.ImageUrl" id="preview" class="img-thumbnail" style="max-width:300px;max-height:300px;" />
+						@* Image Update Input *@
+						<div class="mb-3">
+							<label asp-for="Image" class="form-label">New Villa Image</label>
+							<input asp-for="Image" class="form-control" accept="image/*" onchange="previewImage(this)"
+							placeholder="Describe the villa"/>
+							<span asp-validation-for="Image" class="text-danger small"></span>
+							<small class="text-muted fst-italic">Supported formats: JPG, JPEG, PNG (Max 5MB)</small>
 						</div>
 
 						@* Action Buttons *@
@@ -96,4 +104,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+	<script>
+		function previewImage(input) {
+			const previewContainer = document.getElementById('imagePreview');	// Image container
+			const preview = document.getElementById('preview');		// Image element
+
+			if(input.files && input.files[0]){
+				const reader = new FileReader();
+
+				reader.onload = function (e) {
+					preview.src = e.target.result; 
+					previewContainer.style.display = 'block';
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			} 
+			else {
+				previewContainer.style.display = 'none'
+			}
+		}
+	</script>
 }
+

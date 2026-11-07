@@ -163,7 +163,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Create a record
     [HttpPost]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
@@ -219,7 +219,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Update a record
     [HttpPut("{id:int}")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
@@ -303,7 +303,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Delete a record
     [HttpDelete("{id:int}")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]

@@ -37,7 +37,14 @@ public class BaseService(IHttpClientFactory httpClientFactory, IHttpContextAcces
 
             if(apiRequest.Data != null)
             {
-                message.Content = JsonContent.Create(apiRequest.Data, options: jsonSerializerOptions);
+                if(apiRequest.Data is MultipartFormDataContent multipartContent)
+                {
+                    message.Content = multipartContent;
+                }
+                else
+                {
+                    message.Content = JsonContent.Create(apiRequest.Data, options: jsonSerializerOptions);
+                }
             }
 
             var apiResponse = await client.SendAsync(message);
