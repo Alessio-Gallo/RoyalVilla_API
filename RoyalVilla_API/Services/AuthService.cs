@@ -14,7 +14,8 @@ namespace RoyalVilla_API.Services;
 public class AuthService(
     ApplicationDbContext dbContext, IMapper mapper, 
     IConfiguration configuration, UserManager<ApplicationUser> userManager,
-    RoleManager<IdentityRole> roleManager) : IAuthService
+    RoleManager<IdentityRole> roleManager
+    ) : IAuthService
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
     private readonly IMapper _mapper = mapper; 
@@ -27,7 +28,7 @@ public class AuthService(
         return await _dbContext.ApplicationUsers.AnyAsync(u => u.Email.ToLower() == email.ToLower());
     }
 
-    public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
+    public async Task<TokenDTO> LoginAsync(LoginRequestDTO loginRequestDTO)
     {
         try
         {
@@ -35,28 +36,26 @@ public class AuthService(
                 u => u.Email!.ToLower() == loginRequestDTO.Email.ToLower()
             );
 
-            if(user == null)
+            if(user == null) 
             {
                 return null;    // user not found 
             }
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
 
-            if (!isValid)
+            if (!isValid) 
             {
                 return null;    // Invalid password
             }
 
             //generate TOKEN
             var token = await GenerateJwtToken(user); 
-            LoginResponseDTO loginResponseDTO = new()
+            TokenDTO tokenDTO = new()
             {
-                UserDTO = _mapper.Map<UserDTO>(user),
-                Token = token
+                AccessToken = token
             };
 
-            loginResponseDTO.UserDTO.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "Customer";
-            return loginResponseDTO;
+            return tokenDTO;
         }
         catch(Exception ex)
         {

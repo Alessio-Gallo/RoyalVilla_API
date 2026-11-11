@@ -7,13 +7,12 @@ using RoyalVilla_API.Models;
 using RoyalVilla.DTO;
 using Microsoft.AspNetCore.Authorization;
 using RoyalVilla_API.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace RoyalVilla_API.Controllers;
 
 [ApiController]
 [Route("api/villa")]
-//[Authorize]
-// [Authorize(Roles = "Customer,Admin")]
 public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService) : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
@@ -163,7 +162,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Create a record
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
@@ -219,7 +218,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Update a record
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]
@@ -303,7 +302,7 @@ public class VillaController(ApplicationDbContext dbContext, IMapper mapper, IIm
 
     // Delete a record
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<VillaDTO>), StatusCodes.Status500InternalServerError)]

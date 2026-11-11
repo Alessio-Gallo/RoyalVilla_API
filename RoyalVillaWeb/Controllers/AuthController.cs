@@ -9,10 +9,12 @@ using RoyalVillaWeb.Services;
 
 namespace RoyalVillaWeb.Controllers
 {
-    public class AuthController(IAuthService authService, IMapper mapper) : Controller
+    public class AuthController(IAuthService authService, IMapper mapper, ITokenProvider tokenProvider) : Controller
     {
         private readonly IAuthService _authService = authService; 
         private readonly IMapper _mapper = mapper; 
+
+        private readonly ITokenProvider _tokenProvider = tokenProvider; 
 
         public IActionResult Login()
         {
@@ -26,53 +28,39 @@ namespace RoyalVillaWeb.Controllers
             try
             {
                 // Get the response
-                var response = await _authService.LoginAsync<ApiResponse<LoginResponseDTO>>(loginRequestDTO);
+                var response = await _authService.LoginAsync<ApiResponse<TokenDTO>>(loginRequestDTO);
 
                 if (response != null && response.Success && response.Data != null)
                 {
-                    LoginResponseDTO loginResponseDTO = response.Data;
+                    var principal = _tokenProvider.CreatePrincipalFromJwtToken(response.Data.AccessToken);
 
-                    var handler = new JwtSecurityTokenHandler();
-                    var jwt = handler.ReadJwtToken(loginResponseDTO.Token);
-
-                    // Read the email and role claims from the JWT
-                    var email = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email || c.Type == "email")?.Value;
-
-                    var role = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
-
-                    // Make sure the required claims exist
-                    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(role))
+                    if(principal != null)
                     {
-                        TempData["error"] = "Login failed: email or role claim is missing.";
-                        return View(loginRequestDTO);
+                        // Sign the user in
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                        _tokenProvider.SetToken(response.Data.AccessToken);
+
+                        // Redirect to home when successfully logged in
+                        return RedirectToAction(nameof(Index), "Home");
                     }
-
-                    // Create the identity for cookie authentication
-                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                    identity.AddClaims([
-                        new Claim(ClaimTypes.Email, email),
-                        new Claim(ClaimTypes.Role, role)
-                    ]);
-
-                    var principal = new ClaimsPrincipal(identity);
-
-                    // Sign the user in
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                    HttpContext.Session.SetString(SD.SessionToken, loginResponseDTO.Token);
-                    return RedirectToAction(nameof(Index), "Home");
+                    else
+                    {
+                        TempData["error"] = "Invalid token received. Please try again";
+                    }
                 }
                 else
                 {
                     TempData["error"] = response?.Message ?? "Invalid email or password.";
                 }
+
+                return View(loginRequestDTO);
             }
             catch (Exception ex)
             {
                 TempData["error"] = $"An error occurred: {ex.Message}";
             }
 
-            return View(loginRequestDTO);
+            return View();
         }
 
         public IActionResult Register()
@@ -120,7 +108,8 @@ namespace RoyalVillaWeb.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _tokenProvider.ClearToken();
             return RedirectToAction("Index", "Home");
         }
     }

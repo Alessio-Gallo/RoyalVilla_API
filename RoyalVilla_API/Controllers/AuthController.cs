@@ -50,7 +50,7 @@ public class AuthController(IAuthService authService, IMapper mapper) : Controll
         catch (Exception ex)
         {
             var errorResponse = ApiResponse<UserDTO>.Error(
-                HttpStatusCode.InternalServerError, "An error occurred during registration",ex.Message);
+                HttpStatusCode.InternalServerError, "An error occurred during registration", ex.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
         }
     }
@@ -58,32 +58,32 @@ public class AuthController(IAuthService authService, IMapper mapper) : Controll
 
     // Login endpoint
     [HttpPost("login")]
-    [ProducesResponseType(typeof(ApiResponse<LoginResponseDTO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<LoginResponseDTO>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResponse<LoginResponseDTO>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse<LoginResponseDTO>>> Login([FromBody] LoginRequestDTO loginRequestDTO)
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<TokenDTO>>> Login([FromBody] LoginRequestDTO loginRequestDTO)
     {
         try
         {
             if(loginRequestDTO == null)
             {
-                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Login data is required"));
+                return BadRequest(ApiResponse<TokenDTO>.BadRequest("Login data is required"));
             }
 
             var loginResponse = await _authService.LoginAsync(loginRequestDTO);
 
             if(loginResponse == null)
             {
-                return BadRequest(ApiResponse<LoginResponseDTO>.BadRequest("Login failed. Please check your credentials."));
+                return BadRequest(ApiResponse<TokenDTO>.BadRequest("Login failed. Please check your credentials."));
             }
 
-            // Login OK 
-            var response = ApiResponse<LoginResponseDTO>.Ok(loginResponse, "Login successful");
+            // Auth service 
+            var response = ApiResponse<TokenDTO>.Ok(loginResponse, "Login successful");
             return Ok(response);
         }
         catch (Exception ex)
         {
-            var errorResponse = ApiResponse<LoginResponseDTO>.Error(
+            var errorResponse = ApiResponse<TokenDTO>.Error(
                 HttpStatusCode.InternalServerError, "An error occurred during login", ex.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
         }

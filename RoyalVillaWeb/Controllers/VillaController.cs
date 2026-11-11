@@ -97,25 +97,34 @@ public class VillaController(IVillaService villaService, IMapper mapper) : Contr
         return View(); 
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(VillaUpdateDTO updateDTO)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(updateDTO);
+        }
         try
         {
             var response = await _villaService.UpdateAsync<ApiResponse<VillaDTO>>(updateDTO);
+
             if(response != null && response.Success)
             {
                 TempData["success"] = "Villa updated successfully";
+                return RedirectToAction(nameof(Index)); 
             }
+
+            TempData["error"] = response?.Message 
+                ?? "Villa update failed. No response received from API";
         }
         catch (Exception ex)
         {
             TempData["error"] = $"An error occurred: {ex.Message}";
         }
-        return RedirectToAction(nameof(Index));; 
+
+       return RedirectToAction(nameof(Index));
     }
 
     [Authorize(Roles = "Admin")]

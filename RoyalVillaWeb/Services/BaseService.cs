@@ -6,10 +6,10 @@ using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
 
-public class BaseService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor) : IBaseService
+public class BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider) : IBaseService
 {
     public IHttpClientFactory HttpClientFactory { get; set; } = httpClientFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ITokenProvider _tokenProvider = tokenProvider; 
 
     private static readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
@@ -29,7 +29,7 @@ public class BaseService(IHttpClientFactory httpClientFactory, IHttpContextAcces
                 Method = GetHttpMethod(apiRequest.ApiType),
             };
 
-            var token = _httpContextAccessor.HttpContext?.Session?.GetString(SD.SessionToken);
+            var token = _tokenProvider.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -47,9 +47,38 @@ public class BaseService(IHttpClientFactory httpClientFactory, IHttpContextAcces
                 }
             }
 
+            
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine($"AUTHORIZATION HEADER: {message.Headers.Authorization}");
+            Console.WriteLine("--------------------------------");
+
             var apiResponse = await client.SendAsync(message);
 
-            return await apiResponse.Content.ReadFromJsonAsync<T>(jsonSerializerOptions);
+            var responseContent = await apiResponse.Content.ReadAsStringAsync();
+
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine($"REQUEST: {message.Method} {message.RequestUri}");
+            Console.WriteLine($"TOKEN PRESENT: {!string.IsNullOrEmpty(token)}");
+            Console.WriteLine($"HTTP STATUS: {(int)apiResponse.StatusCode}");
+            Console.WriteLine($"REASON: {apiResponse.ReasonPhrase}");
+            Console.WriteLine("--------------------------------");
+
+            if (string.IsNullOrWhiteSpace(responseContent))
+            {
+                Console.WriteLine("API returned an empty response.");
+                return default;
+            }
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                Console.WriteLine("API request failed.");
+            }
+
+            return JsonSerializer.Deserialize<T>(
+                responseContent,
+                jsonSerializerOptions
+            );
+            // return await apiResponse.Content.ReadFromJsonAsync<T>(jsonSerializerOptions);
         }
         catch (Exception ex)
         {
