@@ -1,20 +1,19 @@
-using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 using RoyalVilla_API.Data;
 using RoyalVilla_API.Models;
 using RoyalVilla.DTO;
 using Microsoft.AspNetCore.Identity;
+using RoyalVilla_API.Services.IServices;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RoyalVilla_API.Services;
 
 public class AuthService(
     ApplicationDbContext dbContext, IMapper mapper, 
     IConfiguration configuration, UserManager<ApplicationUser> userManager,
-    RoleManager<IdentityRole> roleManager
+    RoleManager<IdentityRole> roleManager,
+    ITokenService tokenService
     ) : IAuthService
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
@@ -22,6 +21,8 @@ public class AuthService(
     private readonly IConfiguration _configuration = configuration;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly ITokenService _tokenService = tokenService;
+
 
     public async Task<bool> IsEmailExistentAsync(string email)
     {
@@ -36,23 +37,33 @@ public class AuthService(
                 u => u.Email!.ToLower() == loginRequestDTO.Email.ToLower()
             );
 
-            if(user == null) 
-            {
+            if(user == null) {
                 return null;    // user not found 
             }
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
 
-            if (!isValid) 
-            {
+            if (!isValid) {
                 return null;    // Invalid password
             }
 
-            //generate TOKEN
-            var token = await GenerateJwtToken(user); 
-            TokenDTO tokenDTO = new()
-            {
-                AccessToken = token
+            //generate token
+            var token = await _tokenService.GenerateJwtTokenAsync(user); 
+
+            var tokenHandler = new JwtSecurityTokenHandler(); 
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            var jwtTokenId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Jti)?.Value;
+            
+            // generate new refresh token
+            var refreshToken = await _tokenService.GenerateRefreshTokenAsync();
+            var refreshTokenExpiry = DateTime.UtcNow.AddMinutes(5);
+
+            await _tokenService.SaveRefreshTokenAsync(user.Id, jwtTokenId, refreshToken, refreshTokenExpiry);
+
+            TokenDTO tokenDTO = new() {
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                ExpiresAt = jwtToken.ValidTo
             };
 
             return tokenDTO;
@@ -110,26 +121,64 @@ public class AuthService(
             }
         }
 
-    private async Task<string> GenerateJwtToken(ApplicationUser user)
+    public async Task<TokenDTO?> RefreshAccessTokenAsync(RefreshTokenRequestDTO refreshTokenRequestDTO)
     {
-        var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JwtSettings")["Secret"]!);
-        var roles = await _userManager.GetRolesAsync(user);
+        try
+        {
+            if (string.IsNullOrEmpty(refreshTokenRequestDTO.RefreshToken))
+            {
+                return null; 
+            }
 
-        var tokenDescriptor = new SecurityTokenDescriptor{
-            Subject = new ClaimsIdentity(
-            [
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email!),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, roles.FirstOrDefault()!),
-            ]), 
-            Expires = DateTime.UtcNow.AddDays(7), 
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature
-            )
-        };
+            // Validate refresh token 
+            var (isValid, userId, tokenFamilyId, tokenReused) = 
+                await _tokenService.ValidateRefreshTokenAsync(refreshTokenRequestDTO.RefreshToken);
 
-        var tokenHandler = new JsonWebTokenHandler();
-        return tokenHandler.CreateToken(tokenDescriptor); 
-    } 
+            // Token reuse detected
+            if(tokenReused)
+            {
+                return null; 
+            }
+
+            // Token is invalid or expired
+            if(!isValid || string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(tokenFamilyId))
+            {
+                return null; 
+            }
+
+            // Get user
+            var user = await _dbContext.ApplicationUsers.FindAsync(userId);
+            if(user == null)
+            {
+                return null; 
+            }
+
+            // Revoke old refresh token
+            await _tokenService.RevokeRefreshTokenAsync(refreshTokenRequestDTO.RefreshToken);
+
+            // Generate new access & refresh tokens
+            var token = await _tokenService.GenerateJwtTokenAsync(user); 
+
+            var tokenHandler = new JwtSecurityTokenHandler(); 
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            
+            // New refresh token
+            var refreshToken = await _tokenService.GenerateRefreshTokenAsync();
+            var refreshTokenExpiry = DateTime.UtcNow.AddMinutes(5);
+
+            await _tokenService.SaveRefreshTokenAsync(user.Id, tokenFamilyId, refreshToken, refreshTokenExpiry);
+
+            TokenDTO tokenDTO = new() {
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                ExpiresAt = jwtToken.ValidTo
+            };
+
+            return tokenDTO;
+        }
+        catch (Exception ex)
+        {       
+            throw new InvalidOperationException("An unexpected error occurred during token refresh", ex);
+        }
+    }
 }

@@ -227,6 +227,37 @@ namespace RoyalVilla_API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RoyalVilla_API.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("JwtTokenId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RefreshTokenValue")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("RoyalVilla_API.Models.User", b =>
                 {
                     b.Property<int>("Id")

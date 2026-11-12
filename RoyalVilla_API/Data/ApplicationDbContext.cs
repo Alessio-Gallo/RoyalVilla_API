@@ -11,5 +11,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext(
     public DbSet<User> User { get; set; }
     public DbSet<VillaAmenities> VillaAmenities { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 }
 

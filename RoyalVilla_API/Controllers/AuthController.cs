@@ -88,5 +88,41 @@ public class AuthController(IAuthService authService, IMapper mapper) : Controll
             return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
         }
     }
+
+
+    [HttpPost("refresh-token")]
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<TokenDTO>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<TokenDTO>>> RefreshAccessToken([FromBody] RefreshTokenRequestDTO refreshTokenRequestDTO)
+    {
+        try 
+        {    
+            if(refreshTokenRequestDTO == null || string.IsNullOrEmpty(refreshTokenRequestDTO.RefreshToken))
+            {
+                return BadRequest(ApiResponse<UserDTO>.BadRequest("Refresh token is required"));
+            }
+
+            var tokenResponse = await _authService.RefreshAccessTokenAsync(refreshTokenRequestDTO);
+
+            if(tokenResponse == null)
+            {
+                var errorResponse = ApiResponse<TokenDTO>.Error(
+                    HttpStatusCode.Unauthorized, 
+                    "Invalid or expired refresh token. If token reuse was detected, all your sessions have been terminated. Please login again.");
+                return Unauthorized(errorResponse);
+            }
+
+            // Auth service
+            var response = ApiResponse<TokenDTO>.Ok(tokenResponse, "Token refreshed successfully"); 
+            return Ok(response);
+        } 
+        catch (Exception ex)
+        {
+            var errorResponse = ApiResponse<TokenDTO>.Error(
+                HttpStatusCode.InternalServerError, "An error occurred during token refresh", ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+        }
+    }
 }
 

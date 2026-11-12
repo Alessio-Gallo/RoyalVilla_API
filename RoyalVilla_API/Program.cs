@@ -40,6 +40,8 @@ builder.Services.AddCors();
 
 builder.Services.AddScoped<IImageService, ImageService>();
 
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));

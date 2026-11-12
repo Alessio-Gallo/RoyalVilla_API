@@ -1,0 +1,136 @@
+
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using RoyalVilla_API.Data;
+using RoyalVilla_API.Models;
+using RoyalVilla_API.Services.IServices;
+
+namespace RoyalVilla_API.Services;
+
+public class TokenService(
+    IConfiguration configuration, 
+    UserManager<ApplicationUser> userManager,
+    ApplicationDbContext dbContext
+    ) : ITokenService
+{
+    private readonly IConfiguration _configuration = configuration; 
+    private readonly UserManager<ApplicationUser> _userManager = userManager; 
+    private readonly ApplicationDbContext _dbContext = dbContext; 
+
+    public async Task<string> GenerateJwtTokenAsync(ApplicationUser user)
+    {
+       var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JwtSettings")["Secret"]!);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var tokenDescriptor = new SecurityTokenDescriptor{
+            Subject = new ClaimsIdentity(
+            [
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault()!),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            ]), 
+            Expires = DateTime.UtcNow.AddMinutes(2), 
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature
+            )
+        };
+
+        var tokenHandler = new JsonWebTokenHandler();
+        return tokenHandler.CreateToken(tokenDescriptor); 
+    }
+
+    public async Task<string> GenerateRefreshTokenAsync()
+    {
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        var refreshToken = Convert.ToBase64String(randomNumber);
+    
+        var exists = await _dbContext.RefreshTokens.AnyAsync(item => item.RefreshTokenValue == refreshToken);
+        if(exists)
+        {
+            return await GenerateRefreshTokenAsync();
+        }
+        
+        return refreshToken;
+    }
+
+    public async Task<bool> RevokeRefreshTokenAsync(string refreshTokenId)
+    {
+        var storedToken = await _dbContext.RefreshTokens
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.RefreshTokenValue == refreshTokenId)
+        ;
+
+        if(storedToken == null) {
+            return false;
+        }
+
+        storedToken.IsValid = false; 
+        await _dbContext.SaveChangesAsync();
+        return true; 
+    }
+
+    public async Task SaveRefreshTokenAsync(string userId, string jwtTokenId, string refreshToken, DateTime expiresAt)
+    {
+        var refreshTokenRecord = new RefreshToken
+        {
+            UserId = userId,
+            JwtTokenId = jwtTokenId,
+            IsValid = true,
+            RefreshTokenValue = refreshToken,
+            ExpiresAt = expiresAt
+        };
+
+        _dbContext.RefreshTokens.Add(refreshTokenRecord);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<(bool IsValid, string? UserId, string? TokenFamilyId, bool TokenReused)> ValidateRefreshTokenAsync(string refreshToken)
+    {
+        var storedToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(t => t.RefreshTokenValue == refreshToken);
+
+        // Token does not exist in the database
+        if(storedToken == null) {
+            return (false, null, null, false);
+        }
+
+        // CRITICAL SECURITY CHECK: Token reuse detection
+        // If a token exists but is marked as invalid, it means someone tried to reuse it
+        // This is a strong indicator of token theft
+        if(!storedToken.IsValid)
+        {
+            // Revoke all tokens in THIS TOKEN FAMILY 
+            var tokenFamily = await _dbContext.RefreshTokens.Where(
+                item => item.JwtTokenId == storedToken.JwtTokenId &&
+                        item.UserId == storedToken.UserId
+                )
+                .ToListAsync();
+            
+            if(tokenFamily.Count != 0)
+            {
+                foreach (var token in tokenFamily)
+                {
+                    token.IsValid = false; 
+                }
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return (false, storedToken.UserId, storedToken.JwtTokenId, true);
+        }
+
+        if(storedToken.ExpiresAt < DateTime.UtcNow)
+        {
+            return (false, storedToken.UserId, storedToken.JwtTokenId, false);
+        }
+
+        return (true, storedToken.UserId, storedToken.JwtTokenId, false); 
+    }
+}
