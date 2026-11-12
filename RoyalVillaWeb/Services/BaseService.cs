@@ -18,7 +18,7 @@ public class BaseService(IHttpClientFactory httpClientFactory, ITokenProvider to
     
     public ApiResponse<object> ResponseModel { get; set; } = new();
 
-    public async Task<T?> SendAsync<T>(ApiRequest apiRequest)
+    public async Task<T?> SendAsync<T>(ApiRequest apiRequest, bool withBearer = true)
     {
         try
         {
@@ -30,7 +30,7 @@ public class BaseService(IHttpClientFactory httpClientFactory, ITokenProvider to
             };
 
             var token = _tokenProvider.GetToken();
-            if (!string.IsNullOrEmpty(token))
+            if (withBearer && !string.IsNullOrEmpty(token))
             {
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }

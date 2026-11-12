@@ -6,5 +6,5 @@ namespace RoyalVillaWeb.Services;
 public interface IBaseService
 {
     ApiResponse<object> ResponseModel { get; set; }
-    Task<T?> SendAsync<T>(ApiRequest apiRequest);
+    Task<T?> SendAsync<T>(ApiRequest apiRequest, bool withBearer = true);
 }

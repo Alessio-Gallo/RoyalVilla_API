@@ -16,7 +16,7 @@ public class AuthService(IHttpClientFactory httpClientFactory, ITokenProvider to
             ApiType = SD.ApiType.POST,
             Data = loginRequestDTO,
             Url = $"{APIEndpoint}/login",
-        });
+        }, withBearer: false);
     }
 
     public Task<T?> RegisterAsync<T>(RegistrationRequestDTO registrationRequestDTO)
@@ -26,6 +26,6 @@ public class AuthService(IHttpClientFactory httpClientFactory, ITokenProvider to
             ApiType = SD.ApiType.POST,
             Data = registrationRequestDTO,
             Url = $"{APIEndpoint}/register",
-        });
+        }, withBearer: false);
     }
 }

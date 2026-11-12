@@ -35,7 +35,7 @@ public class VillaService(IHttpClientFactory httpClientFactory, ITokenProvider t
         {
             ApiType = SD.ApiType.GET,           
             Url = $"{APIEndpoint}"
-        });
+        }, withBearer: false);
     }
 
     public Task<T?> GetAsync<T>(int id)
@@ -44,7 +44,7 @@ public class VillaService(IHttpClientFactory httpClientFactory, ITokenProvider t
         {
             ApiType = SD.ApiType.GET, 
             Url = $"{APIEndpoint}/{id}"
-        });
+        }, withBearer: false);
     }
 
     public Task<T?> UpdateAsync<T>(VillaUpdateDTO dto)
