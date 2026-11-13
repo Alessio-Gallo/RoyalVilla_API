@@ -8,7 +8,8 @@ public static class SD
         GET, POST, PUT, DELETE
     }
 
-    public const string SessionToken = "JWTToken";
+    public const string SessionAccessToken = "JWTToken";
+    public const string SessionRefreshToken = "RefreshToken";
     public static string APIBaseUrl { get; set; } = string.Empty;
 
     

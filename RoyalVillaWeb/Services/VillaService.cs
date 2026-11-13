@@ -4,8 +4,10 @@ using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
 
-public class VillaService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider) : 
-    BaseService(httpClientFactory, tokenProvider), IVillaService
+public class VillaService(
+    IHttpClientFactory httpClientFactory, 
+    ITokenProvider tokenProvider,
+    IHttpContextAccessor httpContextAccessor) : BaseService(httpClientFactory, tokenProvider, httpContextAccessor), IVillaService
 {
     private const string APIEndpoint = "/api/villa";
 

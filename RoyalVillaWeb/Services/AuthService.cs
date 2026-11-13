@@ -4,8 +4,10 @@ using RoyalVillaWeb.Models;
 
 namespace RoyalVillaWeb.Services;
 
-public class AuthService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider) : 
-    BaseService(httpClientFactory, tokenProvider), IAuthService
+public class AuthService(
+    IHttpClientFactory httpClientFactory, 
+    ITokenProvider tokenProvider,
+    IHttpContextAccessor httpContextAccessor) : BaseService(httpClientFactory, tokenProvider, httpContextAccessor), IAuthService
 {
     private const string APIEndpoint = "/api/auth";
     
@@ -26,6 +28,16 @@ public class AuthService(IHttpClientFactory httpClientFactory, ITokenProvider to
             ApiType = SD.ApiType.POST,
             Data = registrationRequestDTO,
             Url = $"{APIEndpoint}/register",
+        }, withBearer: false);
+    }
+
+    Task<T?> IAuthService.RefreshTokenAsync<T>(RefreshTokenRequestDTO refreshTokenRequestDTO) where T : default
+    {
+        return SendAsync<T>(new ApiRequest
+        {
+            ApiType = SD.ApiType.POST,
+            Data = refreshTokenRequestDTO,
+            Url = $"{APIEndpoint}/refresh-token",
         }, withBearer: false);
     }
 }

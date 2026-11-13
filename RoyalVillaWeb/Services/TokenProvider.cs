@@ -11,7 +11,8 @@ public class TokenProvider(IHttpContextAccessor httpContextAccessor) : ITokenPro
 
     public void ClearToken()
     {
-        _httpContextAccessor.HttpContext?.Session.Remove(SD.SessionToken);
+        _httpContextAccessor.HttpContext?.Session.Remove(SD.SessionAccessToken);
+        _httpContextAccessor.HttpContext?.Session.Remove(SD.SessionRefreshToken);
     }
 
     
@@ -76,13 +77,19 @@ public class TokenProvider(IHttpContextAccessor httpContextAccessor) : ITokenPro
         }
     }
 
-    public string? GetToken()
+    public string? GetAccessToken()
     {
-        return _httpContextAccessor.HttpContext?.Session.GetString(SD.SessionToken);
+        return _httpContextAccessor.HttpContext?.Session.GetString(SD.SessionAccessToken);
     }
 
-    public void SetToken(string token)
+    public string? GetRefreshToken()
     {
-        _httpContextAccessor.HttpContext?.Session.SetString(SD.SessionToken, token);
+        return _httpContextAccessor.HttpContext?.Session.GetString(SD.SessionRefreshToken);
+    }
+
+    public void SetToken(string token, string refreshToken)
+    {
+        _httpContextAccessor.HttpContext?.Session.SetString(SD.SessionAccessToken, token);
+        _httpContextAccessor.HttpContext?.Session.SetString(SD.SessionRefreshToken, refreshToken);
     }
 }

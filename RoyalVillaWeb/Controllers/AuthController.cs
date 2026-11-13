@@ -38,7 +38,7 @@ namespace RoyalVillaWeb.Controllers
                     {
                         // Sign the user in
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                        _tokenProvider.SetToken(response.Data.AccessToken);
+                        _tokenProvider.SetToken(response.Data.AccessToken, response.Data.RefreshToken);
 
                         // Redirect to home when successfully logged in
                         return RedirectToAction(nameof(Index), "Home");
